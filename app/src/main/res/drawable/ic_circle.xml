@@ -4,7 +4,7 @@
     android:viewportHeight="@integer/pc_viewportHeight"
     android:viewportWidth="@integer/pc_viewportWidth">
     <path
-        android:name="@string/play_path"
+        android:name="@string/circle_path"
         android:fillColor="#000"
-        android:pathData="@string/play_path_data" />
+        android:pathData="@string/circle_path_data" />
 </vector>

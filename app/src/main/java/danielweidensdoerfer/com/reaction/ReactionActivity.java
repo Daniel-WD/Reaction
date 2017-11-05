@@ -3,6 +3,7 @@ package danielweidensdoerfer.com.reaction;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -48,6 +50,50 @@ public class ReactionActivity extends AppCompatActivity {
         mVDivider = findViewById(R.id.divider);
         mVStartBg = findViewById(R.id.startBgView);
         mStartFrame = findViewById(R.id.startFrame);
+
+        mBtnStart.setOnClickListener(v -> {
+
+            long delay = 0;
+            mVStartBg.animate()
+                    .setDuration(300)
+                    .setInterpolator(new AnticipateInterpolator(4))
+                    .scaleX(0)
+                    .scaleY(0)
+                    .start();
+
+            delay += 200;
+
+            mBtnStart.animate()
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            AnimatedVectorDrawable drawable = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.play_to_circle, getTheme());
+                            mBtnStart.setImageDrawable(drawable);
+                            drawable.start();
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    })
+                    .setStartDelay(delay)
+                    .setDuration(300)
+                    .setInterpolator(new OvershootInterpolator(5))
+                    .scaleX(1.5f)
+                    .scaleY(1.5f)
+                    .start();
+        });
     }
 
     @Override

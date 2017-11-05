@@ -79,8 +79,8 @@
 
     <FrameLayout
         android:id="@+id/startFrame"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,9 +88,10 @@
         app:layout_constraintVertical_bias="0.413">
 
         <View
+            android:layout_gravity="center"
             android:id="@+id/startBgView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:background="@drawable/bg_play"
             android:padding="16dp"
             android:scaleType="fitCenter"
@@ -98,9 +99,10 @@
             android:tint="@color/pink" />
 
         <ImageButton
+            android:layout_gravity="center"
             android:id="@+id/btnStart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:background="@android:color/transparent"
             android:padding="16dp"
             android:scaleType="fitCenter"
