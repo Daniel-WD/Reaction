@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Metrics -->
-    <dimen name="pc_width">24dp</dimen>
-    <dimen name="pc_height">24dp</dimen>
-    <integer name="pc_viewportWidth">24</integer>
-    <integer name="pc_viewportHeight">24</integer>
+    <dimen name="pc_width">20dp</dimen>
+    <dimen name="pc_height">20dp</dimen>
+    <integer name="pc_viewportWidth">20</integer>
+    <integer name="pc_viewportHeight">20</integer>
 
     <!-- Paths -->
-    <string name="play_path_data">M 8 12 C 8 14.38 8 16.76 8 19.14 C 11.67 16.81 15.34 14.48 19 12.14 C 15.34 9.81 11.67 7.48 8 5.14 C 8 7.48 8 9.81 8 12</string>
-    <string name="circle_path_data">M 2 12 C 2 17.523 6.477 22 12 22 C 17.523 22 22 17.523 22 12 C 22 6.477 17.523 2 12 2 C 6.477 2 2 6.477 2 12</string>
+    <string name="play_path_data">M 6 10 C 6 12.38 6 14.76 6 17.14 C 9.67 14.81 13.34 12.48 17 10.14 C 13.34 7.81 9.67 5.48 6 3.14 C 6 5.48 6 7.81 6 10</string>
+    <string name="circle_path_data">M 0 10 C 0 15.523 4.477 20 10 20 C 15.523 20 20 15.523 20 10 C 20 4.477 15.523 0 10 0 C 4.477 0 0 4.477 0 10</string>
     <!--<string name="play_path_data">M 8 12 L 8 19.14 L 19 12.14 L 8 5.14 L 8 12</string>-->
     <!--<string name="circle_path_data">M 2 12 C 2 17.523 6.477 22 12 22 C 17.523 22 22 17.523 22 12 C 22 6.477 17.523 2 12 2 C 6.477 2 2 6.477 2 12</string>-->
     <!--<string name="play_path_data">M 8 5.14 L 8 19.14 L 19 12.14 L 8 5.14 Z</string>-->

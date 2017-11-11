@@ -7,6 +7,15 @@
     android:background="@color/nero"
     tools:context="danielweidensdoerfer.com.reaction.ReactionActivity">
 
+    <danielweidensdoerfer.com.reaction.LoadingView
+        android:id="@+id/loadingView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -88,23 +97,19 @@
         app:layout_constraintVertical_bias="0.413">
 
         <View
-            android:layout_gravity="center"
             android:id="@+id/startBgView"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@drawable/bg_play"
-            android:padding="16dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_play"
-            android:tint="@color/pink" />
+            android:layout_gravity="center"
+            android:background="@drawable/bg_play" />
 
         <ImageButton
-            android:layout_gravity="center"
             android:id="@+id/btnStart"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_gravity="center"
             android:background="@android:color/transparent"
-            android:padding="16dp"
+            android:padding="@dimen/btnStartPadding"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_play"
             android:tint="@color/pink" />

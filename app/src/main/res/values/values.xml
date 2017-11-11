@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <dimen name="btnStartPadding">22dp</dimen>
+    <dimen name="currentRoundTextSize">42sp</dimen>
+    <dimen name="currentTaskTextSize">27sp</dimen>
 </resources>

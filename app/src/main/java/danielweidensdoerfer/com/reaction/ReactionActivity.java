@@ -1,21 +1,12 @@
 package danielweidensdoerfer.com.reaction;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.graphics.drawable.AnimatedVectorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -25,74 +16,40 @@ import android.widget.TextView;
 
 public class ReactionActivity extends AppCompatActivity {
 
-    private TextView mTvTitle;
-    private TextView mTvPoints;
-    private TextView mTvPlayedRounds;
-    private TextView mTvRoundRecord;
-    private TextView mTvRemovedObjects;
-    private View mVStartBg, mVDivider;
-    private ImageButton mBtnStart;
-    private FrameLayout mStartFrame;
+    TextView tvTitle;
+    TextView tvPoints;
+    TextView tvPlayedRounds;
+    TextView tvRoundRecord;
+    TextView tvRemovedObjects;
+    View vStartBg, vDivider;
+    ImageButton btnStart;
+    FrameLayout fStart;
+    LoadingView loadingView;
 
-    private Handler mHandler = new Handler();
+    Handler handler = new Handler();
+
+    GameManager gameManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reaction);
 
-        mTvTitle = findViewById(R.id.tvTitle);
-        mTvPoints = findViewById(R.id.tvPoints);
-        mTvPlayedRounds = findViewById(R.id.tvPlayedRounds);
-        mTvRoundRecord = findViewById(R.id.tvRoundRecord);
-        mTvRemovedObjects = findViewById(R.id.tvRemovedObjects);
-        mBtnStart = findViewById(R.id.btnStart);
-        mVDivider = findViewById(R.id.divider);
-        mVStartBg = findViewById(R.id.startBgView);
-        mStartFrame = findViewById(R.id.startFrame);
+        gameManager = new GameManager(this);
 
-        mBtnStart.setOnClickListener(v -> {
+        tvTitle = findViewById(R.id.tvTitle);
+        tvPoints = findViewById(R.id.tvPoints);
+        tvPlayedRounds = findViewById(R.id.tvPlayedRounds);
+        tvRoundRecord = findViewById(R.id.tvRoundRecord);
+        tvRemovedObjects = findViewById(R.id.tvRemovedObjects);
+        btnStart = findViewById(R.id.btnStart);
+        vDivider = findViewById(R.id.divider);
+        vStartBg = findViewById(R.id.startBgView);
+        fStart = findViewById(R.id.startFrame);
+        loadingView = findViewById(R.id.loadingView);
 
-            long delay = 0;
-            mVStartBg.animate()
-                    .setDuration(300)
-                    .setInterpolator(new AnticipateInterpolator(4))
-                    .scaleX(0)
-                    .scaleY(0)
-                    .start();
-
-            delay += 200;
-
-            mBtnStart.animate()
-                    .setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            AnimatedVectorDrawable drawable = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.play_to_circle, getTheme());
-                            mBtnStart.setImageDrawable(drawable);
-                            drawable.start();
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    })
-                    .setStartDelay(delay)
-                    .setDuration(300)
-                    .setInterpolator(new OvershootInterpolator(5))
-                    .scaleX(1.5f)
-                    .scaleY(1.5f)
-                    .start();
+        btnStart.setOnClickListener(v -> {
+            gameManager.startGame();
         });
     }
 
@@ -101,19 +58,19 @@ public class ReactionActivity extends AppCompatActivity {
         super.onStart();
 
         //Rotation of start bg
-        ObjectAnimator rotation = ObjectAnimator.ofFloat(mVStartBg, "rotation", 0, 360);
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(vStartBg, "rotation", 0, 360);
         rotation.setInterpolator(new LinearInterpolator());
         rotation.setRepeatCount(ValueAnimator.INFINITE);
         rotation.setDuration(10000);
         rotation.start();
 
         //enter animations
-        mHandler.postDelayed(() -> {
+        handler.postDelayed(() -> {
             long delay = 100;
 
-            mTvTitle.setTranslationY(mTvTitle.getHeight()/5);
-            mTvTitle.setAlpha(0);
-            mTvTitle.animate()
+            tvTitle.setTranslationY(tvTitle.getHeight()/5);
+            tvTitle.setAlpha(0);
+            tvTitle.animate()
                     .setStartDelay(delay)
                     .setInterpolator(new DecelerateInterpolator())
                     .setDuration(300)
@@ -123,9 +80,9 @@ public class ReactionActivity extends AppCompatActivity {
 
             delay += 200;
 
-            mTvPoints.setAlpha(0);
-            mTvPoints.setTranslationY(mTvPoints.getHeight()/3);
-            mTvPoints.animate()
+            tvPoints.setAlpha(0);
+            tvPoints.setTranslationY(tvPoints.getHeight()/3);
+            tvPoints.animate()
                     .setStartDelay(delay)
                     .setInterpolator(new DecelerateInterpolator())
                     .setDuration(200)
@@ -135,26 +92,27 @@ public class ReactionActivity extends AppCompatActivity {
 
             delay += 100;
 
-            mVDivider.setScaleX(0);
-            mVDivider.animate()
+            vDivider.setScaleX(0);
+            vDivider.animate()
                     .setStartDelay(delay)
                     .setInterpolator(new AccelerateDecelerateInterpolator())
                     .setDuration(200)
                     .scaleX(1)
                     .start();
 
+            float translateY = -tvPlayedRounds.getHeight()/4;
             delay += 100;
-            ViewAnimUtils.translateYAlphaAnim(mTvPlayedRounds, delay);
+            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, tvPlayedRounds);
             delay += 100;
-            ViewAnimUtils.translateYAlphaAnim(mTvRoundRecord, delay);
+            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, tvRoundRecord);
             delay += 100;
-            ViewAnimUtils.translateYAlphaAnim(mTvRemovedObjects, delay);
+            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, tvRemovedObjects);
             delay += 300;
 
-            mStartFrame.setAlpha(0);
-            mStartFrame.setScaleX(0);
-            mStartFrame.setScaleY(0);
-            mStartFrame.animate()
+            fStart.setAlpha(0);
+            fStart.setScaleX(0);
+            fStart.setScaleY(0);
+            fStart.animate()
                     .setDuration(300)
                     .setStartDelay(delay)
                     .setInterpolator(new OvershootInterpolator(3F))
@@ -175,7 +133,7 @@ public class ReactionActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()) {
@@ -190,5 +148,5 @@ public class ReactionActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 }
