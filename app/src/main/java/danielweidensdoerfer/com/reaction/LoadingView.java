@@ -17,31 +17,29 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 public class LoadingView extends View {
 
-    private DynamicLayout mTTLayout;
-    private float mTTX, mTTY;
-    private int mTTLWidth;
+    private DynamicLayout mTLayout;
+    private float mTX, mTY;
+    private int mTLWidth;
 
     private Paint mCPaint, mBPaint, mIPaint, mOPaint, mOCPaint;
-    private TextPaint mRTPaint, mTTPaint;
+    private TextPaint mTPaint;
     private float mCenterX, mCenterY, mWidth, mHeight;
     private float mCRadius = 0, mBRadius = 0, mIRadius = 0;
     private float mICenterRadius = 0;
     private float mIDegrees = 0;
     private float mROFill = 0;
-    private float mOCOffDegrees = 0;
-    private float mOCDegrees = 180;
 
-    private String mRoundText = "";
-    private SpannableStringBuilder mTaskText = new SpannableStringBuilder("");
+    private SpannableStringBuilder mText = new SpannableStringBuilder("");
 
     private boolean mMirrorIndicator = false;
     private boolean mMirrorRO = false;
 
-    private final float TASK_TEXT_REL_RADIUS_WIDTH = 1.8f; //relative
+    private final float TEXT_REL_RADIUS_WIDTH = 1.8f; //relative
     private final float RADIUS_PADDING = 0.15f; //relative
     private final int CIRCLE_STROKE_WIDTH = 5;
 
@@ -51,9 +49,6 @@ public class LoadingView extends View {
 
     public LoadingView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
-
-
         mAct = (ReactionActivity) context;
 
         mHandler = new Handler();
@@ -81,18 +76,10 @@ public class LoadingView extends View {
         mIPaint.setStyle(Paint.Style.FILL);
 
         //round text
-        mRTPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        mRTPaint.setColor(ContextCompat.getColor(getContext(), R.color.snow));
-        mRTPaint.setTextAlign(Paint.Align.CENTER);
-        mRTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.currentRoundTextSize));
-        mRTPaint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-
-        //task text
-        mTTPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        mTTPaint.setColor(ContextCompat.getColor(getContext(), R.color.snow));
-        //mTTPaint.setTextAlign(Paint.Align.CENTER);
-        mTTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.currentTaskTextSize));
-        mTTPaint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+        mTPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        mTPaint.setColor(ContextCompat.getColor(getContext(), R.color.snow));
+        mTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.currentRoundTextSize));
+        mTPaint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 
         //background overlay circle
         mOPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -107,10 +94,6 @@ public class LoadingView extends View {
         mCenterY = h/2;
         mWidth = w;
         mHeight = h;
-
-        mTTLWidth = (int)(calcMaxBRadius()* TASK_TEXT_REL_RADIUS_WIDTH);
-        mTTLayout = new DynamicLayout(mTaskText, mTTPaint, mTTLWidth, Layout.Alignment.ALIGN_CENTER,
-                1, 0, false);
     }
 
     @Override
@@ -122,25 +105,19 @@ public class LoadingView extends View {
         //background circle
         canvas.drawCircle(mCenterX, mCenterY, mBRadius, mBPaint);
 
-        //round text
-        canvas.drawText(mRoundText, mCenterX, mCenterY-(mRTPaint.descent() + mRTPaint.ascent())/2, mRTPaint);
-
         //task text layout
-        canvas.save();
-        updateTTLPosition();
-        canvas.translate(mTTX, mTTY);
-        mTTLayout.draw(canvas);
-        canvas.restore();
+        if(mTLayout != null) {
+            canvas.save();
+            updateTLPosition();
+            canvas.translate(mTX, mTY);
+            mTLayout.draw(canvas);
+            canvas.restore();
+        }
 
         //Overlay
         canvas.drawArc(mWidth/2-mBRadius, mHeight/2-mBRadius,
                 mWidth - (mWidth/2-mBRadius), mHeight/2+mBRadius,
                 mROFill -90 - (mMirrorRO ? 180 : 0), 360-2*(mROFill), false, mOPaint);
-
-        //
-        canvas.drawArc(mWidth/2-mICenterRadius, mHeight/2-mICenterRadius,
-                mWidth - (mWidth/2-mICenterRadius), mHeight/2+mICenterRadius,
-                mOCOffDegrees-90, mOCDegrees, false, mOCPaint);
 
         //indicator circle
         float cx = mCenterX + (float)Math.sin(Math.toRadians(mIDegrees))*mICenterRadius;
@@ -169,7 +146,9 @@ public class LoadingView extends View {
                 mCRadius, calcMaxBRadius());
         blowAnimB.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationEnd(Animator animation) {
-                mRoundText = getContext().getString(R.string.current_round_template, mAct.gameManager.numRound);
+                mText.replace(0, mText.length(),
+                        getContext().getString(R.string.current_round_template, mAct.gameManager.numRound));
+                createTextLayout();
             }
             @Override public void onAnimationStart(Animator animation) {}
             @Override public void onAnimationCancel(Animator animation) {}
@@ -180,11 +159,11 @@ public class LoadingView extends View {
         blowAnimB.start();
 
         //collapse indicator
-        ObjectAnimator collapseI = ObjectAnimator.ofFloat(this, "iRadius",
+        ObjectAnimator collapseIOne = ObjectAnimator.ofFloat(this, "iRadius",
                 mIRadius, mIRadius/3);
-        collapseI.setDuration(220);
-        collapseI.setInterpolator(new OvershootInterpolator());
-        collapseI.start();
+        collapseIOne.setDuration(220);
+        collapseIOne.setInterpolator(new OvershootInterpolator());
+        collapseIOne.start();
 
         //move indicator
         ObjectAnimator moveUpI = ObjectAnimator.ofFloat(this, "iCenterRadius", mICenterRadius,
@@ -222,12 +201,13 @@ public class LoadingView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-                if (value > 180) setBOFill(value - 180);
-                else {
+                if(value > 180) setBOFill(value - 180);
+                else if(value > 0) {
                     if(first){
                         // TODO: 08.11.2017 change text and bg color of overlay
-                        mRoundText = "";
-                        mTaskText.replace(0, mTaskText.length(), mAct.gameManager.task);
+                        mText.replace(0, mText.length(), mAct.gameManager.task);
+                        mTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.currentTaskTextSize));
+                        createTextLayout();
                         mBPaint.setColor(ContextCompat.getColor(getContext(), R.color.dark_dark_nero));
                         first = false;
                     }
@@ -240,17 +220,26 @@ public class LoadingView extends View {
         circulateITwo.setDuration(1200);
         circulateITwo.start();
 
-        /*//collapse back overlay
-        ObjectAnimator collapseBO = ObjectAnimator.ofFloat(this, "bOFill", 0, 180);
-        collapseBO.setStartDelay(delay);
-        collapseBO.setInterpolator(new AccelerateDecelerateInterpolator());
-        collapseBO.setDuration(500);
-        collapseBO.start();*/
+        delay += 1200;
+
+        //collapse indicator
+        ObjectAnimator collapseITwo = ObjectAnimator.ofFloat(this, "iRadius",
+                mIRadius/3, 0);
+        collapseITwo.setStartDelay(delay);
+        collapseITwo.setDuration(200);
+        collapseITwo.setInterpolator(new AnticipateInterpolator(2));
+        collapseITwo.start();
     }
 
-    private void updateTTLPosition() {
-        mTTX = mWidth/2 - mTTLWidth/2;
-        mTTY = mCenterY - mTTLayout.getHeight()/2;
+    private void createTextLayout() {
+        mTLWidth = (int)(calcMaxBRadius()* TEXT_REL_RADIUS_WIDTH);
+        mTLayout = new DynamicLayout(mText, mTPaint, mTLWidth, Layout.Alignment.ALIGN_CENTER,
+                1, 0, false);
+    }
+
+    private void updateTLPosition() {
+        mTX = mWidth/2 - mTLWidth /2;
+        mTY = mCenterY - mTLayout.getHeight()/2;
     }
 
     private float calcMaxCRadius() {
