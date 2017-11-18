@@ -1,4 +1,4 @@
-package danielweidensdoerfer.com.reaction;
+package com.danielweidensdoerfer.reaction;
 
 import org.junit.Test;
 

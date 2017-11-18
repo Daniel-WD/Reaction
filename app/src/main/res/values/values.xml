@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="btnStartPadding">22dp</dimen>
-    <dimen name="currentRoundTextSize">42sp</dimen>
-    <dimen name="currentTaskTextSize">27sp</dimen>
+
+    <dimen name="currentRoundSize">42sp</dimen>
+    <dimen name="currentTaskSize">27sp</dimen>
+    <dimen name="countdownNumberSize">90sp</dimen>
+
+    <integer name="showRoundDuration">600</integer>
+    <integer name="showTaskDuration">600</integer>
+    <integer name="showCountdownNumberDuration">400</integer>
 </resources>

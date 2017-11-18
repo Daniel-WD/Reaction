@@ -1,12 +1,10 @@
-package danielweidensdoerfer.com.reaction;
+package com.danielweidensdoerfer.reaction;
 
 import android.animation.Animator;
 import android.graphics.Point;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 public class GameManager {
@@ -14,6 +12,7 @@ public class GameManager {
     private ReactionActivity mAct;
     private int mActWidth, mActHeight;
 
+    long time = 10; //seconds
     int numRound = 1;
     String task = "Remove all white circles";
 
@@ -100,7 +99,7 @@ public class GameManager {
         mAct.handler.postDelayed(() -> {
             int padding = mAct.getResources().getDimensionPixelSize(R.dimen.btnStartPadding);
             float cRadius = ((mAct.btnStart.getWidth())/2 -padding) *mAct.fStart.getScaleX();
-            mAct.loadingView.setCRadius(cRadius);
+            mAct.loadingView.setIRadius(cRadius);
             mAct.loadingView.blowUp();
             mAct.fStart.setVisibility(View.INVISIBLE);
         }, delay);

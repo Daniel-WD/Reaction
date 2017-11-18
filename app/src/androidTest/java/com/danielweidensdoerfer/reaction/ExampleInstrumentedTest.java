@@ -1,4 +1,4 @@
-package danielweidensdoerfer.com.reaction;
+package com.danielweidensdoerfer.reaction;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
