@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -50,8 +51,9 @@ public class LoadingView extends View {
     private Paint mCPaint, mBPaint, mIPaint, mOPaint, mODPaint/*unused*/;
     private float mIRadius = 0, mICenterRadius = 0, mIDegrees = 0;
     private float mCDegrees = 0;
+    private float mCScale = 1;
+    private float mBScale = 1;
     private float mOFill = 0;
-    private float mBRelRad = 1;
 
     private float mDashesOffset = 0;
 
@@ -130,10 +132,16 @@ public class LoadingView extends View {
         super.onDraw(canvas);
 
         //colored circle
+        canvas.save();
+        canvas.scale(mCScale, mCScale, mWidth/2, mHeight/2);
         canvas.drawArc(mMainRect, -90, mCDegrees, mCDegrees > 0, mCPaint);
+        canvas.restore();
 
         //background
-        canvas.drawCircle(mCenterX, mCenterY, mBRelRad * (calcMaxRadius()-CIRCLE_STROKE_WIDTH/2), mBPaint);
+        canvas.save();
+        canvas.scale(mBScale, mBScale, mWidth/2, mHeight/2);
+        canvas.drawCircle(mCenterX, mCenterY, calcMaxRadius()-CIRCLE_STROKE_WIDTH/2, mBPaint);
+        canvas.restore();
 
         //primary text layout
         if(mPTLayout != null) {
@@ -304,7 +312,6 @@ public class LoadingView extends View {
             if(fraction > 1) return;
             mPTPaint.setAlpha((int)(255 * fraction));
 
-//            mPTScale = fraction;
             mPText = mAct.getString(R.string.time_template, (int)(mAct.gameManager.time * fraction));
             createTextLayouts();
         });
@@ -350,7 +357,9 @@ public class LoadingView extends View {
         });
         dashAnim.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {}
-            @Override public void onAnimationEnd(Animator animation) {}
+            @Override public void onAnimationEnd(Animator animation) {
+                mCPaint.setPathEffect(null);
+            }
             @Override public void onAnimationCancel(Animator animation) {}
             @Override public void onAnimationRepeat(Animator animation) {
                 mDashesOffset += dashLength;
@@ -480,6 +489,23 @@ public class LoadingView extends View {
         exitOne.setInterpolator(new AccelerateInterpolator());
         exitOne.start();
 
+        delay += 100;
+
+        //collapse background
+        ObjectAnimator collapseBgAnim = ObjectAnimator.ofFloat(this, "bScale", 1, 0);
+        collapseBgAnim.setStartDelay(delay);
+        collapseBgAnim.setDuration(300);
+        collapseBgAnim.setInterpolator(new AnticipateInterpolator(1.1f));
+        collapseBgAnim.start();
+
+        delay += 0;
+
+        //collapse colored circle
+        ObjectAnimator collapseCAnim = ObjectAnimator.ofFloat(this, "cScale", 1, 0.3f);
+        collapseCAnim.setStartDelay(delay);
+        collapseCAnim.setDuration(300);
+        collapseCAnim.setInterpolator(new AnticipateInterpolator(1.5f));
+        collapseCAnim.start();
     }
 
     private void createTextLayouts() {
@@ -543,5 +569,14 @@ public class LoadingView extends View {
     public void setTranslationSTY(float tTY) {
         mTranslationSTY = tTY;
         invalidate();
+    }
+
+    public void setBScale(float scale) {
+        mBScale = scale;
+        invalidate();
+    }
+
+    public void setCScale(float scale) {
+        mCScale = scale;
     }
 }
