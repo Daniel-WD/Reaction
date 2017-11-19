@@ -26,35 +26,41 @@ import android.view.animation.OvershootInterpolator;
 
 public class LoadingView extends View {
 
+    //constants
+    private static final float TEXT_REL_RADIUS_WIDTH = 1.8f; //relative
+    private static final float RADIUS_PADDING = 0.15f; //relative
+    private static final int CIRCLE_STROKE_WIDTH = 4;
+    private static final float OUTDOOR_OVERLAY_STRENGTH = 200;
+
+    //metrics
+    private float mCenterX, mCenterY, mWidth, mHeight;
+
+    //text stuff
     private StaticLayout mPTLayout, mSTLayout;
+    private TextPaint mPTPaint, mSTPaint;
     private float mPTX, mPTY, mTranslationPTX = 0, mTranslationPTY = 0;
     private float mSTX, mSTY, mTranslationSTX = 0, mTranslationSTY = 0;
     private int mTLWidth;
+    private String mPText = "", mSText = "";
+    private float mPTScale = 1f, mSTScale = 1f;
 
-    private Paint mCPaint, mBPaint, mIPaint, mOPaint, mODPaint;
-    private TextPaint mPTPaint, mSTPaint;
-    private float mCenterX, mCenterY, mWidth, mHeight;
-
-    private float mCDegrees = 0;
-    private float mIRadius = 0, mICenterRadius = 0, mIDegrees = 0;
-
-    private float mOFill = 0;
-
+    //circle stuff
     private RectF mMainRect, mBgRect;
 
-    private String mPText = "", mSText = "";
+    private Paint mCPaint, mBPaint, mIPaint, mOPaint, mODPaint/*unused*/;
+    private float mIRadius = 0, mICenterRadius = 0, mIDegrees = 0;
+    private float mCDegrees = 0;
+    private float mOFill = 0;
+    private float mBRelRad = 1;
 
     private float mDashesOffset = 0;
 
-    private boolean mMirrorRO = false;
+    private boolean mMirrorRO = false/*unused*/;
 
-    private final float TEXT_REL_RADIUS_WIDTH = 1.8f; //relative
-    private final float RADIUS_PADDING = 0.15f; //relative
-    private final int CIRCLE_STROKE_WIDTH = 4;
-    private final float OUTDOOR_OVERLAY_STRENGTH = 200;
-
+    //handler
     private Handler mHandler;
 
+    //activity
     private ReactionActivity mAct;
 
     public LoadingView(Context context, @Nullable AttributeSet attrs) {
@@ -127,12 +133,13 @@ public class LoadingView extends View {
         canvas.drawArc(mMainRect, -90, mCDegrees, mCDegrees > 0, mCPaint);
 
         //background
-        canvas.drawCircle(mCenterX, mCenterY, calcMaxRadius()-CIRCLE_STROKE_WIDTH/2, mBPaint);
+        canvas.drawCircle(mCenterX, mCenterY, mBRelRad * (calcMaxRadius()-CIRCLE_STROKE_WIDTH/2), mBPaint);
 
         //primary text layout
         if(mPTLayout != null) {
             canvas.save();
             updateTLPosition();
+            canvas.scale(mPTScale, mPTScale, mWidth/2, mHeight/2);
             canvas.translate(mPTX + mTranslationPTX, mPTY + mTranslationPTY);
             mPTLayout.draw(canvas);
             canvas.restore();
@@ -142,6 +149,7 @@ public class LoadingView extends View {
         if(mSTLayout != null) {
             canvas.save();
             updateTLPosition();
+            canvas.scale(mSTScale, mSTScale, mWidth/2, mHeight/2);
             canvas.translate(mSTX + mTranslationSTX, mSTY + mTranslationSTY);
             mSTLayout.draw(canvas);
             canvas.restore();
@@ -163,10 +171,6 @@ public class LoadingView extends View {
     void blowUp() {
         setVisibility(VISIBLE);
         long delay = 0;
-
-        /*mPText.replace(0, mPText.length(),
-                getContext().getString(R.string.current_round_template, mAct.gameManager.numRound));
-        createTextLayouts();*/
 
         //collapse indicator to 1/3
         ObjectAnimator collapseIOne = ObjectAnimator.ofFloat(this, "iRadius",
@@ -279,7 +283,7 @@ public class LoadingView extends View {
 
         delay += 200 + getResources().getInteger(R.integer.showTaskDuration);
 
-        //exit round text - secondary
+        //exit task text - secondary
         ObjectAnimator exitTaskText = ObjectAnimator.ofFloat(this, "translationSTY", 0, calcMaxRadius()/2);
         exitTaskText.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
@@ -290,6 +294,47 @@ public class LoadingView extends View {
         exitTaskText.setDuration(200);
         exitTaskText.setInterpolator(new AccelerateInterpolator());
         exitTaskText.start();
+
+        delay += 200;
+
+        //enter time text - primary
+        ObjectAnimator enterTimeText = ObjectAnimator.ofFloat(this, "translationPTY", -calcMaxRadius()/2, 0);
+        enterTimeText.addUpdateListener(animation -> {
+            float fraction = animation.getAnimatedFraction();
+            if(fraction > 1) return;
+            mPTPaint.setAlpha((int)(255 * fraction));
+
+//            mPTScale = fraction;
+            mPText = mAct.getString(R.string.time_template, (int)(mAct.gameManager.time * fraction));
+            createTextLayouts();
+        });
+        enterTimeText.addListener(new Animator.AnimatorListener() {
+            @Override public void onAnimationStart(Animator animation) {
+                mPTPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+                mPTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.timeNumberSize));
+            }
+            @Override public void onAnimationEnd(Animator animation) {}
+            @Override public void onAnimationCancel(Animator animation) {}
+            @Override public void onAnimationRepeat(Animator animation) {}
+        });
+        enterTimeText.setStartDelay(delay);
+        enterTimeText.setDuration(200);
+        enterTimeText.setInterpolator(new DecelerateInterpolator());
+        enterTimeText.start();
+
+        delay += 200 + getResources().getInteger(R.integer.showTimeDuration);
+
+        //exit time text - primary
+        ObjectAnimator exitTimeText = ObjectAnimator.ofFloat(this, "translationPTY", 0, calcMaxRadius()/2);
+        exitTimeText.addUpdateListener(animation -> {
+            float fraction = animation.getAnimatedFraction();
+            if(fraction > 1) return;
+            mPTPaint.setAlpha((int)(255 * (1-fraction)));
+        });
+        exitTimeText.setStartDelay(delay);
+        exitTimeText.setDuration(200);
+        exitTimeText.setInterpolator(new AccelerateInterpolator());
+        exitTimeText.start();
 
         delay += 200;
 
@@ -320,12 +365,12 @@ public class LoadingView extends View {
 
         long numberMoveDuration = 200;
 
-        //enter three - primary
-        ObjectAnimator enterThree = ObjectAnimator.ofFloat(this, "translationPTY", -calcMaxRadius()/3, 0);
+        //enter three - secondary
+        ObjectAnimator enterThree = ObjectAnimator.ofFloat(this, "translationSTY", -calcMaxRadius()/3, 0);
         enterThree.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
             if(fraction > 1) return;
-            mPTPaint.setAlpha((int)(255 * fraction));
+            mSTPaint.setAlpha((int)(255 * fraction));
         });
         enterThree.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
@@ -335,7 +380,7 @@ public class LoadingView extends View {
                 mSTPaint.setTextSize(countdownNumberSize);
                 mPTPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
                 mSTPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
-                mPText = mAct.getString(R.string.three);
+                mSText = mAct.getString(R.string.three);
                 createTextLayouts();
             }
             @Override public void onAnimationEnd(Animator animation) {}
@@ -349,12 +394,12 @@ public class LoadingView extends View {
 
         delay += numberMoveDuration + getResources().getInteger(R.integer.showCountdownNumberDuration);
 
-        //exit three - primary
-        ObjectAnimator exitThree = ObjectAnimator.ofFloat(this, "translationPTY", 0, calcMaxRadius()/3);
+        //exit three - secondary
+        ObjectAnimator exitThree = ObjectAnimator.ofFloat(this, "translationSTY", 0, calcMaxRadius()/3);
         exitThree.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
             if(fraction > 1) return;
-            mPTPaint.setAlpha((int)(255 * (1-fraction)));
+            mSTPaint.setAlpha((int)(255 * (1-fraction)));
         });
         exitThree.setStartDelay(delay);
         exitThree.setDuration(numberMoveDuration);
@@ -363,16 +408,16 @@ public class LoadingView extends View {
 
         delay += numberMoveDuration;
 
-        //enter two - secondary
-        ObjectAnimator enterTwo = ObjectAnimator.ofFloat(this, "translationSTY", -calcMaxRadius()/3, 0);
+        //enter two - primary
+        ObjectAnimator enterTwo = ObjectAnimator.ofFloat(this, "translationPTY", -calcMaxRadius()/3, 0);
         enterTwo.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
             if(fraction > 1) return;
-            mSTPaint.setAlpha((int)(255 * fraction));
+            mPTPaint.setAlpha((int)(255 * fraction));
         });
         enterTwo.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
-                mSText = mAct.getString(R.string.two);
+                mPText = mAct.getString(R.string.two);
                 createTextLayouts();
             }
             @Override public void onAnimationEnd(Animator animation) {}
@@ -386,12 +431,12 @@ public class LoadingView extends View {
 
         delay += numberMoveDuration + getResources().getInteger(R.integer.showCountdownNumberDuration);
 
-        //exit two - secondary
-        ObjectAnimator exitTwo = ObjectAnimator.ofFloat(this, "translationSTY", 0, calcMaxRadius()/3);
+        //exit two - primary
+        ObjectAnimator exitTwo = ObjectAnimator.ofFloat(this, "translationPTY", 0, calcMaxRadius()/3);
         exitTwo.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
             if(fraction > 1) return;
-            mSTPaint.setAlpha((int)(255 * (1-fraction)));
+            mPTPaint.setAlpha((int)(255 * (1-fraction)));
         });
         exitTwo.setStartDelay(delay);
         exitTwo.setDuration(numberMoveDuration);
@@ -400,16 +445,16 @@ public class LoadingView extends View {
 
         delay += numberMoveDuration;
 
-        //enter one - primary
-        ObjectAnimator enterOne = ObjectAnimator.ofFloat(this, "translationPTY", -calcMaxRadius()/3, 0);
+        //enter one - secondary
+        ObjectAnimator enterOne = ObjectAnimator.ofFloat(this, "translationSTY", -calcMaxRadius()/3, 0);
         enterOne.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
             if(fraction > 1) return;
-            mPTPaint.setAlpha((int)(255 * fraction));
+            mSTPaint.setAlpha((int)(255 * fraction));
         });
         enterOne.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
-                mPText = mAct.getString(R.string.one);
+                mSText = mAct.getString(R.string.one);
                 createTextLayouts();
             }
             @Override public void onAnimationEnd(Animator animation) {}
@@ -423,12 +468,12 @@ public class LoadingView extends View {
 
         delay += numberMoveDuration + getResources().getInteger(R.integer.showCountdownNumberDuration);
 
-        //exit one - primary
-        ObjectAnimator exitOne = ObjectAnimator.ofFloat(this, "translationPTY", 0, calcMaxRadius()/3);
+        //exit one - secondary
+        ObjectAnimator exitOne = ObjectAnimator.ofFloat(this, "translationSTY", 0, calcMaxRadius()/3);
         exitOne.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
             if(fraction > 1) return;
-            mPTPaint.setAlpha((int)(255 * (1-fraction)));
+            mSTPaint.setAlpha((int)(255 * (1-fraction)));
         });
         exitOne.setStartDelay(delay);
         exitOne.setDuration(numberMoveDuration);
