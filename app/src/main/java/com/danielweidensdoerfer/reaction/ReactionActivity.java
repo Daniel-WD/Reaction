@@ -14,21 +14,29 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.danielweidensdoerfer.reaction.game.GameManager;
+import com.danielweidensdoerfer.reaction.game.GameView;
+import com.danielweidensdoerfer.reaction.game.GridGenerator;
+import com.danielweidensdoerfer.reaction.game.TimerView;
+import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
+
 public class ReactionActivity extends AppCompatActivity {
 
-    TextView tvTitle;
-    TextView tvPoints;
-    TextView tvPlayedRounds;
-    TextView tvRoundRecord;
-    TextView tvRemovedObjects;
-    View vStartBg, vDivider;
-    ImageButton btnStart;
-    FrameLayout fStart;
-    LoadingView loadingView;
+    public TextView tvTitle;
+    public TextView tvPoints;
+    public TextView tvPlayedRounds;
+    public TextView tvRoundRecord;
+    public TextView tvRemovedObjects;
+    public View vStartBg, vDivider;
+    public ImageButton btnStart;
+    public FrameLayout fStart;
+    public LoadingView loadingView;
+    public TimerView timerView;
+    public GameView gameView;
 
-    Handler handler = new Handler();
+    public Handler handler = new Handler();
 
-    GameManager gameManager;
+    public GameManager gameManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,8 @@ public class ReactionActivity extends AppCompatActivity {
         vStartBg = findViewById(R.id.startBgView);
         fStart = findViewById(R.id.startFrame);
         loadingView = findViewById(R.id.loadingView);
+        timerView = findViewById(R.id.timeView);
+        gameView = findViewById(R.id.gameView);
 
         btnStart.setOnClickListener(v -> {
             gameManager.startGame();

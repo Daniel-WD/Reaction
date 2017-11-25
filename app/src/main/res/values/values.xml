@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="timeViewSize">50dp</dimen>
+
     <dimen name="btnStartPadding">22dp</dimen>
 
     <dimen name="currentRoundSize">43sp</dimen>
@@ -7,8 +9,13 @@
     <dimen name="timeNumberSize">52sp</dimen>
     <dimen name="countdownNumberSize">90sp</dimen>
 
+    <dimen name="timerTextSize">24sp</dimen>
+
     <integer name="showRoundDuration">600</integer>
     <integer name="showTaskDuration">600</integer>
     <integer name="showTimeDuration">800</integer>
     <integer name="showCountdownNumberDuration">400</integer>
+
+    <!-- GameView -->
+    <dimen name="blockPadding">5dp</dimen>
 </resources>

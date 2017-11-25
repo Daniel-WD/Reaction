@@ -10,6 +10,7 @@
     <color name="dark_dark_nero">#0a0a0a</color>
 
     <color name="pink">#e91e63</color>
+    <color name="piiink">#1ee9bd</color>
 
     <color name="yellow_light">#e5eec1</color>
     <color name="green_light">#a2d4ab</color>
@@ -24,7 +25,28 @@
     <color name="snow">#FEFCFC</color>
     <color name="nobel">#A0A0A0</color>
 
-    <color name="_1">#f44336</color>
+    <color name="_1">#e82c1e</color>
+    <color name="_2">#e81e61</color>
+    <color name="_3">#ca1ee8</color>
+    <color name="_4">#681ee8</color>
+    <color name="_5">#1ed0e8</color>
+    <color name="_6">#1ea8e8</color>
+    <color name="_7">#1e8de8</color>
+    <color name="_8">#1e3ce8</color>
+    <color name="_9">#1ee8d4</color>
+    <color name="_10">#1ee825</color>
+    <color name="_11">#8ae81e</color>
+    <color name="_12">#d4e81e</color>
+    <color name="_13">#e8541e</color>
+    <color name="_14">#e84d1e</color>
+    <color name="_15">#e8971e</color>
+    <color name="_16">#e8b61e</color>
+    <color name="_17">#9e9e9e</color>
+    <color name="_18">#727272</color>
+    <color name="_19">#607d8b</color>
+    <color name="_20">#455a64</color>
+
+<!--    <color name="_1">#f44336</color>
     <color name="_2">#e91e63</color>
     <color name="_3">#9c27b0</color>
     <color name="_4">#673ab7</color>
@@ -43,5 +65,5 @@
     <color name="_17">#9e9e9e</color>
     <color name="_18">#727272</color>
     <color name="_19">#607d8b</color>
-    <color name="_20">#455a64</color>
+    <color name="_20">#455a64</color>-->
 </resources>

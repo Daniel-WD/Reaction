@@ -1,4 +1,4 @@
-package com.danielweidensdoerfer.reaction;
+package com.danielweidensdoerfer.reaction.utils;
 
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;

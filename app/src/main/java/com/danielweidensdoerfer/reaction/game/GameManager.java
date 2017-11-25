@@ -1,22 +1,30 @@
-package com.danielweidensdoerfer.reaction;
+package com.danielweidensdoerfer.reaction.game;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.OvershootInterpolator;
+
+import com.danielweidensdoerfer.reaction.R;
+import com.danielweidensdoerfer.reaction.ReactionActivity;
+import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
+import com.danielweidensdoerfer.reaction.utils.ViewUtils;
 
 public class GameManager {
 
     private ReactionActivity mAct;
     private int mActWidth, mActHeight;
 
-    long time = 10; //seconds
-    int numRound = 1;
-    String task = "Remove all white circles";
+    public long time = 10; //seconds
+    public int numRound = 1;
+    public String task = "Remove all white circles";
 
-    GameManager(ReactionActivity activity) {
+    public GameManager(ReactionActivity activity) {
         mAct = activity;
 
         Point size = new Point();
@@ -25,7 +33,7 @@ public class GameManager {
         mActHeight = size.y;
     }
 
-    void startGame() {
+    public void startGame() {
         long delay = 0;
         //blop the button
         mAct.vStartBg.animate()
@@ -43,7 +51,7 @@ public class GameManager {
                     @Override public void onAnimationStart(Animator animation) {
                         //play to circle anim
                         AnimatedVectorDrawable drawable = (AnimatedVectorDrawable)
-                                mAct.getResources().getDrawable(R.drawable.play_to_circle, mAct.getTheme());
+                                mAct.getResources().getDrawable(R.drawable.anim_play_to_circle, mAct.getTheme());
                         mAct.btnStart.setImageDrawable(drawable);
                         drawable.start();
 
@@ -98,10 +106,39 @@ public class GameManager {
         //blow up
         mAct.handler.postDelayed(() -> {
             int padding = mAct.getResources().getDimensionPixelSize(R.dimen.btnStartPadding);
-            float cRadius = ((mAct.btnStart.getWidth())/2 -padding) *mAct.fStart.getScaleX();
-            mAct.loadingView.setIRadius(cRadius);
+            float circleRadius = ((mAct.btnStart.getWidth())/2 -padding) *mAct.fStart.getScaleX();
+            mAct.loadingView.setIRadius(circleRadius);
             mAct.loadingView.blowUp();
             mAct.fStart.setVisibility(View.INVISIBLE);
+        }, delay);
+    }
+
+    public void prepareTimer() {
+        mAct.loadingView.setVisibility(View.INVISIBLE);
+        mAct.timerView.setVisibility(View.VISIBLE);
+
+        long delay = 0;
+
+        //move timeView
+        float startX = mActWidth/2-mAct.timerView.getWidth()/2;
+        float startY = mActHeight/2-mAct.timerView.getHeight()/2;
+        Path path = new Path();
+        path.moveTo(startX, startY);
+        path.cubicTo(startX+mActWidth/4, startY,
+                mAct.timerView.getX(), startY-mActHeight/4,
+                mAct.timerView.getX(), mAct.timerView.getY());
+
+        ObjectAnimator moveTVAnim = ObjectAnimator.ofFloat(mAct.timerView,
+                "x", "y", path);
+        moveTVAnim.setStartDelay(delay);
+        moveTVAnim.setDuration(300);
+        moveTVAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+        moveTVAnim.start();
+
+        delay += 200;
+
+        mAct.handler.postDelayed(() -> {
+            mAct.timerView.show();
         }, delay);
     }
 

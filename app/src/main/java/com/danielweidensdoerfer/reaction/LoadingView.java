@@ -146,7 +146,6 @@ public class LoadingView extends View {
         //primary text layout
         if(mPTLayout != null) {
             canvas.save();
-            updateTLPosition();
             canvas.scale(mPTScale, mPTScale, mWidth/2, mHeight/2);
             canvas.translate(mPTX + mTranslationPTX, mPTY + mTranslationPTY);
             mPTLayout.draw(canvas);
@@ -156,7 +155,6 @@ public class LoadingView extends View {
         //secondary text layout
         if(mSTLayout != null) {
             canvas.save();
-            updateTLPosition();
             canvas.scale(mSTScale, mSTScale, mWidth/2, mHeight/2);
             canvas.translate(mSTX + mTranslationSTX, mSTY + mTranslationSTY);
             mSTLayout.draw(canvas);
@@ -176,7 +174,7 @@ public class LoadingView extends View {
         canvas.drawCircle(cx, cy, mIRadius, mIPaint);
     }
 
-    void blowUp() {
+    public void blowUp() {
         setVisibility(VISIBLE);
         long delay = 0;
 
@@ -501,11 +499,18 @@ public class LoadingView extends View {
         delay += 0;
 
         //collapse colored circle
-        ObjectAnimator collapseCAnim = ObjectAnimator.ofFloat(this, "cScale", 1, 0.3f);
+        float scale = (float)getResources().getDimensionPixelSize(R.dimen.timeViewSize)/mMainRect.width();
+        ObjectAnimator collapseCAnim = ObjectAnimator.ofFloat(this, "cScale", 1, scale);
         collapseCAnim.setStartDelay(delay);
         collapseCAnim.setDuration(300);
-        collapseCAnim.setInterpolator(new AnticipateInterpolator(1.5f));
+        collapseCAnim.setInterpolator(new AnticipateInterpolator(1.4f));
         collapseCAnim.start();
+
+        delay += 300;
+
+        mHandler.postDelayed(() -> {
+            mAct.gameManager.prepareTimer();
+        }, delay);
     }
 
     private void createTextLayouts() {
@@ -514,9 +519,7 @@ public class LoadingView extends View {
                 1, 0, false);
         mSTLayout = new StaticLayout(mSText, mSTPaint, mTLWidth, Layout.Alignment.ALIGN_CENTER,
                 1, 0, false);
-    }
 
-    private void updateTLPosition() {
         mPTX = mWidth/2 - mTLWidth /2;
         mPTY = mCenterY - mPTLayout.getHeight()/2;
         mSTX = mWidth/2 - mTLWidth /2;
