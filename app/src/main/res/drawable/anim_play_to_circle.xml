@@ -3,7 +3,7 @@
     android:drawable="@drawable/ic_play">
 
     <target
-        android:animation="@animator/pc_path_animation"
-        android:name="@string/play_path"/>
+        android:name="@string/play_path"
+        android:animation="@animator/pc_path_animation" />
 
 </animated-vector>
