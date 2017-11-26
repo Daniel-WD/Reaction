@@ -17,5 +17,5 @@
     <integer name="showCountdownNumberDuration">400</integer>
 
     <!-- GameView -->
-    <dimen name="blockPadding">5dp</dimen>
+    <dimen name="blockPadding">10dp</dimen>
 </resources>

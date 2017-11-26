@@ -56,7 +56,7 @@ public class TimerView extends View {
 
         mBPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBPaint.setStyle(Paint.Style.FILL);
-        mBPaint.setColor(ContextCompat.getColor(context, R.color.dark_nero));
+        mBPaint.setColor(ContextCompat.getColor(context, R.color.dark_dark_nero));
 
         mTPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mTPaint.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
@@ -106,7 +106,7 @@ public class TimerView extends View {
         openAnim.setDuration(200);
         openAnim.start();
 
-        delay += 200;
+        delay += 50;
         mHandler.postDelayed(() -> {
             mAct.gameView.show();
         }, delay);

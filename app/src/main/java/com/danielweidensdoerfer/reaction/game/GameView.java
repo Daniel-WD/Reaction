@@ -1,9 +1,12 @@
 package com.danielweidensdoerfer.reaction.game;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.os.Handler;
 import android.renderscript.Sampler;
 import android.support.annotation.Nullable;
@@ -13,24 +16,29 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
 
+import java.util.Random;
+
 public class GameView extends View {
 
     //drawing
-    private Paint mStrokePaint;
+    private Paint mStrokePaint, mBorderPaint, mBackgroundPaint;
 
     //metrics
     private float mWidth, mHeight;
     private float mBlockSize, mBlockPadding;
 
-    private int mRows = 6, mCols = 4;
+    private float mDLScale = 0;
+
+    private int mRows = 5, mCols = 5;
 
     private float mXOffset = 0, mYOffset = 0;
 
-    private float[][][] mValues;/*cols|rows|x, y, alpha, scale, rotation*/
+    private float[][][] mValues;/*cols|rows|x, y, alpha, scale, rotation, translationX, translationY*/
 
     private ReactionActivity mAct;
 
@@ -47,10 +55,19 @@ public class GameView extends View {
 
         mHandler = new Handler();
 
+        mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBorderPaint.setColor(ContextCompat.getColor(context, R.color.snow));
+        mBorderPaint.setStyle(Paint.Style.STROKE);
+        mBorderPaint.setStrokeWidth(0);
+
         mStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mStrokePaint.setColor(ContextCompat.getColor(context, R.color.pink));
-        mStrokePaint.setStrokeWidth(1);
+        mStrokePaint.setColor(ContextCompat.getColor(context, R.color.snow));
         mStrokePaint.setStyle(Paint.Style.STROKE);
+        mStrokePaint.setStrokeWidth(1);
+
+        mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBackgroundPaint.setColor(ContextCompat.getColor(context, R.color.dark_dark_nero));
+        mBackgroundPaint.setStyle(Paint.Style.FILL);
 
         mBlockPadding = getResources().getDimensionPixelSize(R.dimen.blockPadding);
 
@@ -72,14 +89,16 @@ public class GameView extends View {
 
         mBlockSize -= 2*mBlockPadding;
 
-        mValues = new float[mCols][mRows][5];
+        mValues = new float[mCols][mRows][7];
         for(int i = 0; i < mCols; i++) {
             for(int j = 0; j < mRows; j++) {
                 mValues[i][j][0] = mXOffset + mBlockPadding + i*2*mBlockPadding + mBlockSize*i;
                 mValues[i][j][1] = mYOffset + mBlockPadding + j*2*mBlockPadding + mBlockSize*j;
-                mValues[i][j][2] = 1f;
+                mValues[i][j][2] = 0f;
                 mValues[i][j][3] = 1f;
                 mValues[i][j][4] = 0;
+                mValues[i][j][5] = 0;
+                mValues[i][j][6] = 0;
             }
         }
 
@@ -91,14 +110,34 @@ public class GameView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-/*        for(int i = 0; i <= mRows; i++) {
-            canvas.drawLine(0, mYOffset + mBlockSize*i,
-                    mWidth, mYOffset + mBlockSize*i, mStrokePaint);
+        //divider lines
+        //horizontal
+        for(int i = 1; i < mRows; i++) {
+            for(int j = 0; j < mCols; j++) {
+                canvas.drawLine(mXOffset + mBlockPadding + j*(2*mBlockPadding+mBlockSize) + (1-mDLScale)*mBlockSize/2,
+                        mYOffset + (mBlockSize+2*mBlockPadding)*i,
+                        mXOffset + mBlockPadding + j*(2*mBlockPadding+mBlockSize) + mBlockSize - (1-mDLScale)*mBlockSize/2,
+                        mYOffset + (mBlockSize+2*mBlockPadding)*i,
+                        mStrokePaint);
+            }
         }
+        //vertical
+        for(int i = 1; i < mCols; i++) {
+            for(int j = 0; j < mRows; j++) {
+                canvas.drawLine(mXOffset + (mBlockSize+2*mBlockPadding)*i,
+                        mYOffset + mBlockPadding + j*(2*mBlockPadding+mBlockSize) + (1-mDLScale)*mBlockSize/2,
+                        mXOffset + (mBlockSize+2*mBlockPadding)*i,
+                        mYOffset + mBlockPadding + j*(2*mBlockPadding+mBlockSize) + mBlockSize - (1-mDLScale)*mBlockSize/2,
+                        mStrokePaint);
+            }
+        }
+
+        /*
         for(int i = 0; i <= mCols; i++) {
             canvas.drawLine(mXOffset + mBlockSize*i, 0, mXOffset + mBlockSize*i, mHeight, mStrokePaint);
         }*/
 
+        //items
         for(int i = 0; i < mCols; i++) {
             for(int j = 0; j < mRows; j++) {
 //                canvas.drawRect(mValues[i][j][0], mValues[i][j][1],
@@ -110,9 +149,10 @@ public class GameView extends View {
                 mItemField[i][j].drawable.setBounds(0, 0, (int)mBlockSize, (int)mBlockSize);
 
                 canvas.scale(mValues[i][j][3], mValues[i][j][3], mValues[i][j][0] + mBlockSize/2, mValues[i][j][1] + mBlockSize/2);
-                canvas.translate(mValues[i][j][0], mValues[i][j][1]);
+                canvas.translate(mValues[i][j][0] + mValues[i][j][5], mValues[i][j][1] + mValues[i][j][6]);
                 canvas.rotate(mValues[i][j][4], mBlockSize/2, mBlockSize/2);
 
+                //canvas.drawRect(0, 0, mBlockSize, mBlockSize, mStrokePaint);
                 mItemField[i][j].drawable.draw(canvas);
                 canvas.restore();
             }
@@ -125,14 +165,27 @@ public class GameView extends View {
             case MotionEvent.ACTION_DOWN:
                 int[] pos = findColRowByLocation(event.getX(), event.getY());
                 if(pos == null) return false;
-                ValueAnimator fadeOut = ValueAnimator.ofFloat(1, 0);
-                fadeOut.setDuration(200);
+                Random r = new Random();
+                boolean left = r.nextInt(2) == 0;
+                Path p = new Path();
+                p.moveTo(0, 0);
+                p.cubicTo(0.7f, 0, 1, 0.3f, 1, 1);
+                PathMeasure pm = new PathMeasure(p, false);
+                float[] pathPos = new float[2];
+
+                ValueAnimator fadeOut = ValueAnimator.ofFloat(0, 1);
+                fadeOut.setDuration(300);
                 fadeOut.setInterpolator(new AccelerateInterpolator(0.5f));
                 fadeOut.addUpdateListener(animation -> {
                     float v = (float) animation.getAnimatedValue();
-                    mValues[pos[0]][pos[1]][2] = v;
-                    mValues[pos[0]][pos[1]][3] = v;
-                    mValues[pos[0]][pos[1]][4] = v * 360 * 2;
+                    //mValues[pos[0]][pos[1]][2] = 1-v;
+                    //mValues[pos[0]][pos[1]][3] = 1+v;
+                    mValues[pos[0]][pos[1]][4] = (left ? -1 : 1) * v * 360 * 1/4;
+
+                    pm.getPosTan(pm.getLength()*v, pathPos, null);
+                    mValues[pos[0]][pos[1]][5] = (left ? -1 : 1) * mWidth/4 * pathPos[0];
+                    mValues[pos[0]][pos[1]][6] = mHeight*1.1f * pathPos[1];
+
                     invalidate();
                 });
                 fadeOut.start();
@@ -146,30 +199,46 @@ public class GameView extends View {
 
         long delay = 0;
 
-        setAlpha(0);
-        animate().setInterpolator(new AccelerateDecelerateInterpolator())
+        mAct.gameBackground.setVisibility(VISIBLE);
+        mAct.gameBackground.setPivotY(mAct.gameBackground.getHeight()*2/3);
+        mAct.gameBackground.setScaleY(0);
+        mAct.gameBackground.animate()
                 .setStartDelay(delay)
-                .alpha(1)
-                .setDuration(100)
+                .scaleY(1)
+                .setInterpolator(new DecelerateInterpolator())
+                .setDuration(200)
                 .start();
 
         delay += 200;
-        ValueAnimator anim = ValueAnimator.ofFloat(0, 1);
-        anim.addUpdateListener(animation -> {
-            float v = (float) animation.getAnimatedFraction();
-            for(int i = 0; i < mCols; i++) {
-                for(int j = 0; j < mRows; j++) {
-                    mValues[i][j][2] = v;
-                    mValues[i][j][3] = v;
-//                    mValues[i][j][4] = 360 * v;
+
+        //show items
+        for (int i = mRows-1; i >= 0; i--) {
+            final int row = i;
+            ValueAnimator anim = ValueAnimator.ofFloat(0, 1);
+            anim.addUpdateListener(animation -> {
+                float v = (float) animation.getAnimatedValue();
+                for(int j = 0; j < mCols; j++) {
+                    mValues[j][row][2] = v;
+                    mValues[j][row][6] = -(1-v)*mBlockSize/5;
                 }
-            }
-            invalidate();
-        });
-        anim.setStartDelay(delay);
-        anim.setInterpolator(new AccelerateDecelerateInterpolator());
-        anim.setDuration(200);
-//        anim.start();
+                invalidate();
+            });
+            anim.setStartDelay(delay);
+            anim.setInterpolator(new DecelerateInterpolator());
+            anim.setDuration(100);
+            anim.start();
+            delay += 30;
+        }
+
+        delay += 150;
+
+        //show divider lines
+        ObjectAnimator scaleDLs = ObjectAnimator.ofFloat(this, "dLScale", 0, 1);
+        scaleDLs.setStartDelay(delay);
+        scaleDLs.setDuration(200);
+        scaleDLs.setInterpolator(new DecelerateInterpolator());
+        scaleDLs.start();
+
     }
 
     private int[] findColRowByLocation(float sx, float sy){
@@ -178,11 +247,16 @@ public class GameView extends View {
             for(int j = 0; j < mRows; j++) {
                 px = mValues[i][j][0];
                 py = mValues[i][j][1];
-                if(px < sx && py < sy && px+mBlockSize > sx && py+mBlockSize > sy) {
+                if(px-mBlockPadding < sx && py-mBlockPadding < sy && px+mBlockSize+mBlockPadding > sx && py+mBlockSize+mBlockPadding > sy) {
                     return new int[] {i, j};
                 }
             }
         }
         return null;
+    }
+
+    public void setDLScale(float scale) {
+        mDLScale = scale;
+        invalidate();
     }
 }

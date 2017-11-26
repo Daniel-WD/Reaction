@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.danielweidensdoerfer.reaction.game.GameManager;
 import com.danielweidensdoerfer.reaction.game.GameView;
-import com.danielweidensdoerfer.reaction.game.GridGenerator;
 import com.danielweidensdoerfer.reaction.game.TimerView;
 import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
 
@@ -33,6 +32,7 @@ public class ReactionActivity extends AppCompatActivity {
     public LoadingView loadingView;
     public TimerView timerView;
     public GameView gameView;
+    public View gameBackground;
 
     public Handler handler = new Handler();
 
@@ -57,6 +57,7 @@ public class ReactionActivity extends AppCompatActivity {
         loadingView = findViewById(R.id.loadingView);
         timerView = findViewById(R.id.timeView);
         gameView = findViewById(R.id.gameView);
+        gameBackground = findViewById(R.id.gameBackground);
 
         btnStart.setOnClickListener(v -> {
             gameManager.startGame();

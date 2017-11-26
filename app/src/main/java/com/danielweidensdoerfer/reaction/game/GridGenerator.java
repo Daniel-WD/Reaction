@@ -1,6 +1,7 @@
 package com.danielweidensdoerfer.reaction.game;
 
 import android.content.Context;
+import android.graphics.drawable.VectorDrawable;
 import android.support.v4.content.ContextCompat;
 
 import com.danielweidensdoerfer.reaction.R;
