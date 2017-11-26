@@ -13,6 +13,26 @@ public class GridGenerator {
 
     private static int[] sColors;
 
+    //half currency
+    private static Item sHalfDollar;
+    private static Item sHalfDoublePound;
+    private static Item sHalfEuro;
+    private static Item sHalfP;
+    private static Item sHalfPound;
+    private static Item sHalfRp;
+    private static Item sHalfWon;
+    private static Item sHalfYen;
+
+    //currency
+    private static Item sDollar;
+    private static Item sDoublePound;
+    private static Item sEuro;
+    private static Item sP;
+    private static Item sPound;
+    private static Item sRp;
+    private static Item sWon;
+    private static Item sYen;
+
     //numbers/symbols
     private static Item sOne;
     private static Item sTwo;
@@ -66,6 +86,70 @@ public class GridGenerator {
 //                ContextCompat.getColor(context, R.color._20)
         };
 
+        sHalfEuro = new Item(context.getResources().getDrawable(R.drawable.img_half_cur_euro, context.getTheme()));
+
+        sItems.add(sHalfEuro);
+
+        sHalfDollar = new Item(context.getResources().getDrawable(R.drawable.img_half_cur_dollar, context.getTheme()));
+
+        sItems.add(sHalfDollar);
+
+        sHalfDoublePound = new Item(context.getResources().getDrawable(R.drawable.img_half_cur_double_pound, context.getTheme()));
+
+        sItems.add(sHalfDoublePound);
+
+        sHalfP = new Item(context.getResources().getDrawable(R.drawable.img_half_cur_p, context.getTheme()));
+
+        sItems.add(sHalfP);
+
+        sHalfPound = new Item(context.getResources().getDrawable(R.drawable.img_half_cur_pound, context.getTheme()));
+
+        sItems.add(sHalfPound);
+
+        sHalfRp = new Item(context.getResources().getDrawable(R.drawable.img_half_cur_rp, context.getTheme()));
+
+        sItems.add(sHalfRp);
+
+        sHalfWon = new Item(context.getResources().getDrawable(R.drawable.img_half_cur_won, context.getTheme()));
+
+        sItems.add(sHalfWon);
+
+        sHalfYen = new Item(context.getResources().getDrawable(R.drawable.img_half_cur_yen, context.getTheme()));
+
+        sItems.add(sHalfYen);
+
+        /*sEuro = new Item(context.getResources().getDrawable(R.drawable.img_cur_euro, context.getTheme()));
+
+        sItems.add(sEuro);
+
+        sDollar = new Item(context.getResources().getDrawable(R.drawable.img_cur_dollar, context.getTheme()));
+
+        sItems.add(sDollar);
+
+        sDoublePound = new Item(context.getResources().getDrawable(R.drawable.img_cur_double_pound, context.getTheme()));
+
+        sItems.add(sDoublePound);
+
+        sP = new Item(context.getResources().getDrawable(R.drawable.img_cur_p, context.getTheme()));
+
+        sItems.add(sP);
+
+        sPound = new Item(context.getResources().getDrawable(R.drawable.img_cur_pound, context.getTheme()));
+
+        sItems.add(sPound);
+
+        sRp = new Item(context.getResources().getDrawable(R.drawable.img_cur_rp, context.getTheme()));
+
+        sItems.add(sRp);
+
+        sWon = new Item(context.getResources().getDrawable(R.drawable.img_cur_won, context.getTheme()));
+
+        sItems.add(sWon);
+
+        sYen = new Item(context.getResources().getDrawable(R.drawable.img_cur_yen, context.getTheme()));
+
+        sItems.add(sYen);*/
+/*
         sOne = new Item(context.getResources().getDrawable(R.drawable.img_num_1, context.getTheme()));
 
         sItems.add(sOne);
@@ -101,6 +185,10 @@ public class GridGenerator {
         sNine = new Item(context.getResources().getDrawable(R.drawable.img_num_9, context.getTheme()));
 
         sItems.add(sNine);
+
+        sZero = new Item(context.getResources().getDrawable(R.drawable.ic_zero, context.getTheme()));
+
+        sItems.add(sZero);*/
 
         /*sBanana = new Item(context.getResources().getDrawable(R.drawable.img_fr_banana, context.getTheme()));
 
