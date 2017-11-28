@@ -12,6 +12,7 @@ import android.renderscript.Sampler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -34,11 +35,12 @@ public class GameView extends View {
 
     private float mDLScale = 0;
 
-    private int mRows = 5, mCols = 5;
+    private int mRows = 7, mCols = 7;
 
     private float mXOffset = 0, mYOffset = 0;
 
     private float[][][] mValues;/*cols|rows|x, y, alpha, scale, rotation, translationX, translationY*/
+    private boolean[][] mClicked;
 
     private ReactionActivity mAct;
 
@@ -72,6 +74,13 @@ public class GameView extends View {
         mBlockPadding = getResources().getDimensionPixelSize(R.dimen.blockPadding);
 
         mItemField = GridGenerator.generate(mRows, mCols);
+
+        mClicked = new boolean[mCols][mRows];
+        for(int i = 0; i < mCols; i++) {
+            for(int j = 0; j < mRows; j++){
+                mClicked[i][j] = false;
+            }
+        }
     }
 
     @Override
@@ -161,12 +170,15 @@ public class GameView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch(event.getAction()) {
+        switch(event.getActionMasked()) {
+            case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
-                int[] pos = findColRowByLocation(event.getX(), event.getY());
-                if(pos == null) return false;
-                Random r = new Random();
-                boolean left = r.nextInt(2) == 0;
+                int[] pos = findColRowByLocation(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()));
+                if(pos == null || mClicked[pos[0]][pos[1]]) return false;
+                mClicked[pos[0]][pos[1]] = true;
+
+                final float f = (event.getX(event.getActionIndex()) - (mValues[pos[0]][pos[1]][0] + mBlockSize/2)) / (mBlockSize/2);
+
                 Path p = new Path();
                 p.moveTo(0, 0);
                 p.cubicTo(0.7f, 0, 1, 0.3f, 1, 1);
@@ -174,22 +186,22 @@ public class GameView extends View {
                 float[] pathPos = new float[2];
 
                 ValueAnimator fadeOut = ValueAnimator.ofFloat(0, 1);
-                fadeOut.setDuration(300);
+                fadeOut.setDuration(400);
                 fadeOut.setInterpolator(new AccelerateInterpolator(0.5f));
                 fadeOut.addUpdateListener(animation -> {
                     float v = (float) animation.getAnimatedValue();
                     //mValues[pos[0]][pos[1]][2] = 1-v;
                     //mValues[pos[0]][pos[1]][3] = 1+v;
-                    mValues[pos[0]][pos[1]][4] = (left ? -1 : 1) * v * 360 * 1/4;
+                    mValues[pos[0]][pos[1]][4] = (f > 0 ? -1 : 1) * v * 360 * 1/2;
 
                     pm.getPosTan(pm.getLength()*v, pathPos, null);
-                    mValues[pos[0]][pos[1]][5] = (left ? -1 : 1) * mWidth/4 * pathPos[0];
+                    mValues[pos[0]][pos[1]][5] = -f * mWidth/3 * pathPos[0];
                     mValues[pos[0]][pos[1]][6] = mHeight*1.1f * pathPos[1];
 
                     invalidate();
                 });
                 fadeOut.start();
-                return false;
+                return true;
         }
         return super.onTouchEvent(event);
     }
@@ -206,7 +218,7 @@ public class GameView extends View {
                 .setStartDelay(delay)
                 .scaleY(1)
                 .setInterpolator(new DecelerateInterpolator())
-                .setDuration(200)
+                .setDuration(250)
                 .start();
 
         delay += 200;
