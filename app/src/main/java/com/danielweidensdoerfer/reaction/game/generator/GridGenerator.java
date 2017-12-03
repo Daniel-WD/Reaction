@@ -22,6 +22,19 @@ public class GridGenerator {
 
     private static int[] sColors;
 
+    //weather
+    private static Item sCloudRain;
+    private static Item sCloudRainThunder;
+    private static Item sCloudSnow;
+    private static Item sCloudSun;
+    private static Item sClouds;
+    private static Item sMoon;
+    private static Item sMoonCloud;
+    private static Item sMoonCloudRain;
+    private static Item sSun;
+    private static Item sSunCloud;
+    private static Item sSunCloudRain;
+
     //emojis
     private static Item sAdmired;
     private static Item sAngry;
@@ -95,6 +108,31 @@ public class GridGenerator {
         };
 
         long id = 0;
+
+        //weather
+        sCloudRain = new Item(id++, context, R.drawable.img_wth_cloud_rain, WEATHER);
+        sCloudRainThunder = new Item(id++, context, R.drawable.img_wth_cloud_rain_thunder, WEATHER);
+        sCloudSnow = new Item(id++, context, R.drawable.img_wth_cloud_snow, WEATHER);
+        sCloudSun = new Item(id++, context, R.drawable.img_wth_cloud_sun, WEATHER);
+        sClouds = new Item(id++, context, R.drawable.img_wth_clouds, WEATHER);
+        sMoon = new Item(id++, context, R.drawable.img_wth_moon, WEATHER);
+        sMoonCloud = new Item(id++, context, R.drawable.img_wth_moon_cloud, WEATHER);
+        sMoonCloudRain = new Item(id++, context, R.drawable.img_wth_moon_cloud_rain, WEATHER);
+        sSun = new Item(id++, context, R.drawable.img_wth_sun, WEATHER);
+        sSunCloud = new Item(id++, context, R.drawable.img_wth_sun_cloud, WEATHER);
+        sSunCloudRain = new Item(id++, context, R.drawable.img_wth_sun_cloud_rain, WEATHER);
+
+        sItems.add(sCloudRain);
+        sItems.add(sCloudRainThunder);
+        sItems.add(sCloudSnow);
+        sItems.add(sCloudSun);
+        sItems.add(sClouds);
+        sItems.add(sMoon);
+        sItems.add(sMoonCloud);
+        sItems.add(sMoonCloudRain);
+        sItems.add(sSun);
+        sItems.add(sSunCloud);
+        sItems.add(sSunCloudRain);
 
         //emojis
         sAdmired = new Item(id++, context, R.drawable.img_emj_admired, EMOJI);
@@ -216,7 +254,7 @@ public class GridGenerator {
             case GENERATE_ALL_ITEMS:
                 //find items
                 ArrayList<Item> items = new ArrayList<>();
-                int itemCount = 5;
+                int itemCount = 11;
                 for (int i = 0; i < itemCount; i++) {
                     Item rItem;
                     do {
