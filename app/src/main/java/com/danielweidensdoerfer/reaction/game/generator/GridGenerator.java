@@ -22,6 +22,20 @@ public class GridGenerator {
 
     private static int[] sColors;
 
+    //social media
+    private static Item sFacebook;
+    private static Item sHandshake;
+    private static Item sInformation;
+    private static Item sInstagram;
+    private static Item sLabel;
+    private static Item sLike;
+    private static Item sLinkedIn;
+    private static Item sPinterest;
+    private static Item sSnapchat;
+    private static Item sTwitter;
+    private static Item sWhatsapp;
+    private static Item sYoutube;
+
     //weather
     private static Item sCloudRain;
     private static Item sCloudRainThunder;
@@ -109,6 +123,34 @@ public class GridGenerator {
 
         long id = 0;
 
+        //social media
+
+        sFacebook = new Item(id++, context, R.drawable.img_scm_facebook, SOCIAL_MEDIA);
+        sHandshake = new Item(id++, context, R.drawable.img_scm_handshake, SOCIAL_MEDIA);
+        sInformation = new Item(id++, context, R.drawable.img_scm_information, SOCIAL_MEDIA);
+        sInstagram = new Item(id++, context, R.drawable.img_scm_instagram, SOCIAL_MEDIA);
+        sLabel = new Item(id++, context, R.drawable.img_scm_label, SOCIAL_MEDIA);
+        sLike = new Item(id++, context, R.drawable.img_scm_like, SOCIAL_MEDIA);
+        sLinkedIn = new Item(id++, context, R.drawable.img_scm_linkedin, SOCIAL_MEDIA);
+        sPinterest = new Item(id++, context, R.drawable.img_scm_pinterest, SOCIAL_MEDIA);
+        sSnapchat = new Item(id++, context, R.drawable.img_scm_snapchat, SOCIAL_MEDIA);
+        sTwitter = new Item(id++, context, R.drawable.img_scm_twitter, SOCIAL_MEDIA);
+        sWhatsapp = new Item(id++, context, R.drawable.img_scm_whatsapp, SOCIAL_MEDIA);
+        sYoutube = new Item(id++, context, R.drawable.img_scm_youtube, SOCIAL_MEDIA);
+
+        sItems.add(sFacebook);
+        sItems.add(sHandshake);
+        sItems.add(sInformation);
+        sItems.add(sInstagram);
+        sItems.add(sLabel);
+        sItems.add(sLike);
+        sItems.add(sLinkedIn);
+        sItems.add(sPinterest);
+        sItems.add(sSnapchat);
+        sItems.add(sTwitter);
+        sItems.add(sWhatsapp);
+        sItems.add(sYoutube);
+
         //weather
         sCloudRain = new Item(id++, context, R.drawable.img_wth_cloud_rain, WEATHER);
         sCloudRainThunder = new Item(id++, context, R.drawable.img_wth_cloud_rain_thunder, WEATHER);
@@ -122,17 +164,17 @@ public class GridGenerator {
         sSunCloud = new Item(id++, context, R.drawable.img_wth_sun_cloud, WEATHER);
         sSunCloudRain = new Item(id++, context, R.drawable.img_wth_sun_cloud_rain, WEATHER);
 
-        sItems.add(sCloudRain);
-        sItems.add(sCloudRainThunder);
-        sItems.add(sCloudSnow);
-        sItems.add(sCloudSun);
-        sItems.add(sClouds);
-        sItems.add(sMoon);
-        sItems.add(sMoonCloud);
-        sItems.add(sMoonCloudRain);
-        sItems.add(sSun);
-        sItems.add(sSunCloud);
-        sItems.add(sSunCloudRain);
+//        sItems.add(sCloudRain);
+//        sItems.add(sCloudRainThunder);
+//        sItems.add(sCloudSnow);
+//        sItems.add(sCloudSun);
+//        sItems.add(sClouds);
+//        sItems.add(sMoon);
+//        sItems.add(sMoonCloud);
+//        sItems.add(sMoonCloudRain);
+//        sItems.add(sSun);
+//        sItems.add(sSunCloud);
+//        sItems.add(sSunCloudRain);
 
         //emojis
         sAdmired = new Item(id++, context, R.drawable.img_emj_admired, EMOJI);
@@ -286,7 +328,7 @@ public class GridGenerator {
                 break;
         }
 
-        colorize(result, COLORIZE_RANDOM);
+        colorize(result, COLORIZE_ITEM_BOUNDED);
         return result;
     }
 

@@ -7,13 +7,15 @@ abstract class Tag {
     static final int NUMBER = 2;
     static final int EMOJI = 3;
     static final int WEATHER = 4;
+    static final int SOCIAL_MEDIA = 5;
 
     static final int[] tags = {
             FRUIT,
             CURRENCY,
             NUMBER,
             EMOJI,
-            WEATHER
+            WEATHER,
+            SOCIAL_MEDIA
     };
 
 }
