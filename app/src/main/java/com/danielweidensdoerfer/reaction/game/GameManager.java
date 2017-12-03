@@ -12,6 +12,7 @@ import android.view.animation.OvershootInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
+import com.danielweidensdoerfer.reaction.game.generator.GridGenerator;
 import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
 import com.danielweidensdoerfer.reaction.utils.ViewUtils;
 
@@ -20,9 +21,9 @@ public class GameManager {
     private ReactionActivity mAct;
     private int mActWidth, mActHeight;
 
-    public long time = 10; //seconds
+    public int time = 10; //seconds
     public int numRound = 1;
-    public String task = "Remove all white circles";
+    public String task = "Remove all dollar and euro circles";
 
     public GameManager(ReactionActivity activity) {
         mAct = activity;
@@ -31,6 +32,8 @@ public class GameManager {
         mAct.getWindowManager().getDefaultDisplay().getSize(size);
         mActWidth = size.x;
         mActHeight = size.y;
+
+        GridGenerator.init(activity);
     }
 
     public void startGame() {
@@ -108,9 +111,14 @@ public class GameManager {
             int padding = mAct.getResources().getDimensionPixelSize(R.dimen.btnStartPadding);
             float circleRadius = ((mAct.btnStart.getWidth())/2 -padding) *mAct.fStart.getScaleX();
             mAct.loadingView.setIRadius(circleRadius);
-            mAct.loadingView.blowUp();
+            nextRound();
             mAct.fStart.setVisibility(View.INVISIBLE);
         }, delay);
+    }
+
+    public void nextRound() {
+        mAct.gameView.setItemField(GridGenerator.generate(1));
+        mAct.loadingView.blowUp();
     }
 
     public void prepareTimer() {

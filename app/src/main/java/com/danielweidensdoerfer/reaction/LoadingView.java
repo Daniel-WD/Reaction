@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -387,7 +386,7 @@ public class LoadingView extends View {
                 mSTPaint.setTextSize(countdownNumberSize);
                 mPTPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
                 mSTPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
-                mSText = mAct.getString(R.string.three);
+                mSText = mAct.getString(R.string.num_three);
                 createTextLayouts();
             }
             @Override public void onAnimationEnd(Animator animation) {}
@@ -424,7 +423,7 @@ public class LoadingView extends View {
         });
         enterTwo.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
-                mPText = mAct.getString(R.string.two);
+                mPText = mAct.getString(R.string.num_two);
                 createTextLayouts();
             }
             @Override public void onAnimationEnd(Animator animation) {}
@@ -461,7 +460,7 @@ public class LoadingView extends View {
         });
         enterOne.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
-                mSText = mAct.getString(R.string.one);
+                mSText = mAct.getString(R.string.num_one);
                 createTextLayouts();
             }
             @Override public void onAnimationEnd(Animator animation) {}

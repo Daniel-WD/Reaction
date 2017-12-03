@@ -33,6 +33,7 @@ public class ReactionActivity extends AppCompatActivity {
     public TimerView timerView;
     public GameView gameView;
     public View gameBackground;
+    //public TextView tvTask;
 
     public Handler handler = new Handler();
 
@@ -58,6 +59,7 @@ public class ReactionActivity extends AppCompatActivity {
         timerView = findViewById(R.id.timeView);
         gameView = findViewById(R.id.gameView);
         gameBackground = findViewById(R.id.gameBackground);
+        //tvTask = findViewById(R.id.tvTask);
 
         btnStart.setOnClickListener(v -> {
             gameManager.startGame();

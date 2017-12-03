@@ -7,22 +7,21 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
+import android.graphics.PorterDuff;
 import android.os.Handler;
-import android.renderscript.Sampler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
-
-import java.util.Random;
+import com.danielweidensdoerfer.reaction.game.generator.GridGenerator;
+import com.danielweidensdoerfer.reaction.game.generator.Item;
 
 public class GameView extends View {
 
@@ -35,7 +34,7 @@ public class GameView extends View {
 
     private float mDLScale = 0;
 
-    private int mRows = 7, mCols = 7;
+    private int mRows = 1, mCols = 1;
 
     private float mXOffset = 0, mYOffset = 0;
 
@@ -50,8 +49,6 @@ public class GameView extends View {
 
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
-        GridGenerator.init(context);
 
         mAct = (ReactionActivity) context;
 
@@ -72,13 +69,19 @@ public class GameView extends View {
         mBackgroundPaint.setStyle(Paint.Style.FILL);
 
         mBlockPadding = getResources().getDimensionPixelSize(R.dimen.blockPadding);
+    }
 
-        mItemField = GridGenerator.generate(mRows, mCols);
-
+    public void init() {
         mClicked = new boolean[mCols][mRows];
         for(int i = 0; i < mCols; i++) {
             for(int j = 0; j < mRows; j++){
                 mClicked[i][j] = false;
+            }
+        }
+        onSizeChanged(getWidth(), getHeight(), getWidth(), getHeight());
+        for(int i = 0; i < mCols; i++) {
+            for(int j = 0; j < mRows; j++){
+                mItemField[i][j].drawable.setBounds(0, 0, (int)mBlockSize, (int)mBlockSize);
             }
         }
     }
@@ -155,13 +158,13 @@ public class GameView extends View {
 
                 canvas.save();
                 mItemField[i][j].drawable.setAlpha((int)(mValues[i][j][2] * 255));
-                mItemField[i][j].drawable.setBounds(0, 0, (int)mBlockSize, (int)mBlockSize);
 
                 canvas.scale(mValues[i][j][3], mValues[i][j][3], mValues[i][j][0] + mBlockSize/2, mValues[i][j][1] + mBlockSize/2);
                 canvas.translate(mValues[i][j][0] + mValues[i][j][5], mValues[i][j][1] + mValues[i][j][6]);
                 canvas.rotate(mValues[i][j][4], mBlockSize/2, mBlockSize/2);
 
                 //canvas.drawRect(0, 0, mBlockSize, mBlockSize, mStrokePaint);
+                mItemField[i][j].drawable.setColorFilter(mItemField[i][j].color, PorterDuff.Mode.SRC_ATOP);
                 mItemField[i][j].drawable.draw(canvas);
                 canvas.restore();
             }
@@ -223,6 +226,10 @@ public class GameView extends View {
 
         delay += 200;
 
+        mHandler.postDelayed(() -> {
+            mAct.timerView.start();
+        }, delay);
+
         //show items
         for (int i = mRows-1; i >= 0; i--) {
             final int row = i;
@@ -265,6 +272,15 @@ public class GameView extends View {
             }
         }
         return null;
+    }
+
+    public void setItemField(Item[][] field) {
+        if(field == null) return;
+        mItemField = field;
+        mCols = mItemField.length;
+        mRows = mItemField[0].length;
+        init();
+        invalidate();
     }
 
     public void setDLScale(float scale) {

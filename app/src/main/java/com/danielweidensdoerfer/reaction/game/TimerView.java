@@ -14,6 +14,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
@@ -94,8 +96,7 @@ public class TimerView extends View {
     }
 
     public void show() {
-        mText = String.valueOf(mAct.gameManager.time);
-        createTextLayouts();
+        setTime(mAct.gameManager.time);
 
         long delay = 0;
 
@@ -113,6 +114,15 @@ public class TimerView extends View {
 
     }
 
+    public void start() {
+        if(true) return;
+        //countdown
+        ObjectAnimator countdown = ObjectAnimator.ofInt(this, "time", Integer.parseInt(mText), 0);
+        countdown.setInterpolator(new LinearInterpolator());
+        countdown.setDuration(Integer.parseInt(mText)*1000);
+        countdown.start();
+    }
+
     private void createTextLayouts() {
         mTLWidth = (int)mWidth;
         mTLayout = new StaticLayout(mText, mTPaint, mTLWidth, Layout.Alignment.ALIGN_CENTER,
@@ -123,6 +133,12 @@ public class TimerView extends View {
 
     public void setBScale(float scale) {
         mBScale = scale;
+        invalidate();
+    }
+
+    public void setTime(int time) {
+        mText = String.valueOf(time);
+        createTextLayouts();
         invalidate();
     }
 

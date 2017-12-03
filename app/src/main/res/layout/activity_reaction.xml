@@ -8,11 +8,11 @@
     tools:context="com.danielweidensdoerfer.reaction.ReactionActivity">
 
     <View
-        android:visibility="invisible"
         android:id="@+id/gameBackground"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/dark_dark_nero"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +48,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+<!--    <TextView
+        android:alpha="0.7"
+        android:id="@+id/tvTask"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/timeViewSize"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:textColor="@color/snow"
+        android:textSize="22sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/timeView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <TextView
         android:id="@+id/tvTitle"
