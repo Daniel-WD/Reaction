@@ -12,9 +12,9 @@ import static com.danielweidensdoerfer.reaction.game.generator.Tag.*;
 
 public class GridGenerator {
 
-    public static final int GENERATE_1_ITEM = 0;
-    public static final int GENERATE_ITEM_CAT = 1;
-    public static final int GENERATE_ALL_ITEMS = 2;
+    public static final int CREATE_1_ITEM = 0;
+    public static final int CREATE_ITEM_CAT = 1;
+    public static final int CREATE_ALL_ITEMS = 2;
 
     public static final int COLORIZE_RANDOM = 0;
     public static final int COLORIZE_ITEM_BOUNDED = 1;
@@ -111,7 +111,7 @@ public class GridGenerator {
                 ContextCompat.getColor(context, R.color._10),
                 ContextCompat.getColor(context, R.color._11),
 //                ContextCompat.getColor(context, R.color._12),
-                ContextCompat.getColor(context, R.color._13),
+                //ContextCompat.getColor(context, R.color._13),
                 ContextCompat.getColor(context, R.color._14),
                 ContextCompat.getColor(context, R.color._15),
                 ContextCompat.getColor(context, R.color._16),
@@ -124,7 +124,6 @@ public class GridGenerator {
         long id = 0;
 
         //social media
-
         sFacebook = new Item(id++, context, R.drawable.img_scm_facebook, SOCIAL_MEDIA);
         sHandshake = new Item(id++, context, R.drawable.img_scm_handshake, SOCIAL_MEDIA);
         sInformation = new Item(id++, context, R.drawable.img_scm_information, SOCIAL_MEDIA);
@@ -164,17 +163,17 @@ public class GridGenerator {
         sSunCloud = new Item(id++, context, R.drawable.img_wth_sun_cloud, WEATHER);
         sSunCloudRain = new Item(id++, context, R.drawable.img_wth_sun_cloud_rain, WEATHER);
 
-//        sItems.add(sCloudRain);
-//        sItems.add(sCloudRainThunder);
-//        sItems.add(sCloudSnow);
-//        sItems.add(sCloudSun);
-//        sItems.add(sClouds);
-//        sItems.add(sMoon);
-//        sItems.add(sMoonCloud);
-//        sItems.add(sMoonCloudRain);
-//        sItems.add(sSun);
-//        sItems.add(sSunCloud);
-//        sItems.add(sSunCloudRain);
+        sItems.add(sCloudRain);
+        sItems.add(sCloudRainThunder);
+        sItems.add(sCloudSnow);
+        sItems.add(sCloudSun);
+        sItems.add(sClouds);
+        sItems.add(sMoon);
+        sItems.add(sMoonCloud);
+        sItems.add(sMoonCloudRain);
+        sItems.add(sSun);
+        sItems.add(sSunCloud);
+        sItems.add(sSunCloudRain);
 
         //emojis
         sAdmired = new Item(id++, context, R.drawable.img_emj_admired, EMOJI);
@@ -183,11 +182,11 @@ public class GridGenerator {
         sLove = new Item(id++, context, R.drawable.img_emj_love, EMOJI);
         sSad = new Item(id++, context, R.drawable.img_emj_sad, EMOJI);
 
-//        sItems.add(sAdmired);
-//        sItems.add(sAngry);
-//        sItems.add(sFunny);
-//        sItems.add(sLove);
-//        sItems.add(sSad);
+        sItems.add(sAdmired);
+        sItems.add(sAngry);
+        sItems.add(sFunny);
+        sItems.add(sLove);
+        sItems.add(sSad);
 
         //currency
         sEuro = new Item(id++, context, R.drawable.img_cur_euro, CURRENCY);
@@ -199,14 +198,14 @@ public class GridGenerator {
         sYen = new Item(id++, context, R.drawable.img_cur_yen, CURRENCY);
         sWon = new Item(id++, context, R.drawable.img_cur_won, CURRENCY);
 
-//        sItems.add(sEuro);
-//        sItems.add(sDollar);
-//        sItems.add(sDoublePound);
-//        sItems.add(sPeso);
-//        sItems.add(sPound);
-//        sItems.add(sRupiah);
-//        sItems.add(sWon);
-//        sItems.add(sYen);
+        sItems.add(sEuro);
+        sItems.add(sDollar);
+        sItems.add(sDoublePound);
+        sItems.add(sPeso);
+        sItems.add(sPound);
+        sItems.add(sRupiah);
+        sItems.add(sWon);
+        sItems.add(sYen);
 
         //numbers
         sOne = new Item(id++, context, R.drawable.img_num_1, NUMBER);
@@ -220,16 +219,16 @@ public class GridGenerator {
         sNine = new Item(id++, context, R.drawable.img_num_9, NUMBER);
         sZero = new Item(id++, context, R.drawable.ic_zero, NUMBER);
 
-//        sItems.add(sOne);
-//        sItems.add(sTwo);
-//        sItems.add(sThree);
-//        sItems.add(sFour);
-//        sItems.add(sFive);
-//        sItems.add(sSix);
-//        sItems.add(sSeven);
-//        sItems.add(sEight);
-//        sItems.add(sNine);
-//        sItems.add(sZero);
+        sItems.add(sOne);
+        sItems.add(sTwo);
+        sItems.add(sThree);
+        sItems.add(sFour);
+        sItems.add(sFive);
+        sItems.add(sSix);
+        sItems.add(sSeven);
+        sItems.add(sEight);
+        sItems.add(sNine);
+        sItems.add(sZero);
 
         //fruits
         sBanana = new Item(id++, context, R.drawable.img_fr_banana, FRUIT);
@@ -237,99 +236,87 @@ public class GridGenerator {
         sMelon = new Item(id++, context, R.drawable.img_fr_melon, FRUIT);
         sPear = new Item(id++, context, R.drawable.img_fr_pear, FRUIT);
 
-//        sItems.add(sBanana);
-//        sItems.add(sApple);
-//        sItems.add(sMelon);
-//        sItems.add(sPear);
-
-//
-//        sCircleFilled = new Item(context, R.drawable.img_obj_circle_filled);
-//        sItems.add(sCircleFilled);
-//
-//        sCircleOutline = new Item(context, R.drawable.img_obj_circle_outline);
-//
-//        sItems.add(sCircleOutline);
-//
-//        sSquareFilled = new Item(context, R.drawable.img_obj_square_filled);
-//
-//        sItems.add(sSquareFilled);
-//
-//        sSquareOutline = new Item(context, R.drawable.img_obj_square_outline);
-//
-//        sItems.add(sSquareOutline);
-//
-//        sSquareRoundFilled = new Item(context, R.drawable.img_obj_square_round_filled);
-//
-//        sItems.add(sSquareRoundFilled);
-//
-//        sSquareRoundOutline = new Item(context, R.drawable.img_obj_square_round_outline);
-//
-//        sItems.add(sSquareRoundOutline);
-
-//        Random random = new Random();
-//        for (Item item : sItems) {
-//            item.drawable.setTint(sColors[random.nextInt(sColors.length)]);
-//        }
+        sItems.add(sBanana);
+        sItems.add(sApple);
+        sItems.add(sMelon);
+        sItems.add(sPear);
     }
 
     public static Item[][] generate(int round) {
         //int cols = random.nextInt(7)+3;
         //int rows = random.nextInt(7)+3;
-        int cols = 5;
-        int rows = 5;
+        int cols = 7;
+        int rows = 11;
         int total = cols*rows;
         Item[][] result = new Item[cols][rows];
 
-        switch(GENERATE_ALL_ITEMS) {
-            case GENERATE_1_ITEM:
-                Item item = sItems.get(random.nextInt(sItems.size()));
-                for (int i = 0; i < cols; i++) {
-                    for (int j = 0; j < rows; j++) {
-                        result[i][j] = item.copy();
-                    }
-                }
-                break;
-
-            case GENERATE_ITEM_CAT:
-                break;
-
-            case GENERATE_ALL_ITEMS:
-                //find items
-                ArrayList<Item> items = new ArrayList<>();
-                int itemCount = 11;
-                for (int i = 0; i < itemCount; i++) {
-                    Item rItem;
-                    do {
-                        int rand = random.nextInt(sItems.size());
-                        rItem = sItems.get(rand);
-                    } while(items.contains(rItem));
-                    items.add(rItem);
-                }
-                //prepare itemRest for even item counts
-                int[] itemRest = new int[itemCount];
-                int index = 0;
-                for(int i = 0; i < total; i++) {
-                    if(index == itemRest.length) index = 0;
-                    itemRest[index++]++;
-                }
-                //set items
-                for(int i = 0; i < cols; i++) {
-                    for(int j = 0; j < rows; j++) {
-                        int itemIndex;
-                        do {
-                            itemIndex = random.nextInt(items.size());
-                        }while(itemRest[itemIndex] <= 0);
-
-                        itemRest[itemIndex]--;
-
-                        result[i][j] = items.get(itemIndex).copy();
-                    }
-                }
-                break;
-        }
+        create(result, CREATE_ITEM_CAT);
 
         colorize(result, COLORIZE_ITEM_BOUNDED);
         return result;
+    }
+
+    private static void create(Item[][] field, int mode) {
+        switch(mode) {
+            case CREATE_1_ITEM:
+                ArrayList<Item> oneItem = new ArrayList<>();
+                oneItem.add(sItems.get(random.nextInt(sItems.size())));
+                create(field, oneItem, 1);
+                break;
+
+            case CREATE_ITEM_CAT:
+                //find tag
+                int tag = tags[random.nextInt(tags.length)];
+                //find all items
+                ArrayList<Item> tagItems = new ArrayList<>();
+                for (Item item : sItems) {
+                    if(item.tags.contains(tag)) tagItems.add(item);
+                }
+                //create for chosen items
+                create(field, tagItems, tagItems.size());
+                break;
+
+            case CREATE_ALL_ITEMS:
+                //create for all items
+                create(field, sItems, 5);
+                break;
+        }
+    }
+
+    private static void create(final Item[][] field, final ArrayList<Item> itemCollection, final int itemCount) {
+        int cols = field.length;
+        int rows = field[0].length;
+        int total = rows*cols;
+        ArrayList<Item> pickedItems = new ArrayList<>();
+        //find items
+        for (int i = 0; i < itemCount; i++) {
+            Item rItem;
+            do {
+                int rand = random.nextInt(itemCollection.size());
+                rItem = itemCollection.get(rand);
+            } while(pickedItems.contains(rItem));
+            pickedItems.add(rItem);
+        }
+        //prepare itemRest for even item counts
+        int[] itemRest = new int[itemCount];
+        int index = 0;
+        for(int i = 0; i < total; i++) {
+            if(index == itemRest.length) index = 0;
+            itemRest[index++]++;
+        }
+        //set items
+        for(int i = 0; i < cols; i++) {
+            for(int j = 0; j < rows; j++) {
+                int itemIndex;
+                do {
+                    itemIndex = random.nextInt(pickedItems.size());
+                }while(itemRest[itemIndex] <= 0);
+
+                itemRest[itemIndex]--;
+
+                field[i][j] = pickedItems.get(itemIndex).copy();
+            }
+        }
     }
 
     private static void colorize(Item[][] field, int mode) {

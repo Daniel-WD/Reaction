@@ -177,7 +177,7 @@ public class GameView extends View {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
                 int[] pos = findColRowByLocation(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()));
-                if(pos == null || mClicked[pos[0]][pos[1]]) return false;
+                if(pos == null || mClicked[pos[0]][pos[1]]) return true;
                 mClicked[pos[0]][pos[1]] = true;
 
                 final float f = (event.getX(event.getActionIndex()) - (mValues[pos[0]][pos[1]][0] + mBlockSize/2)) / (mBlockSize/2);
