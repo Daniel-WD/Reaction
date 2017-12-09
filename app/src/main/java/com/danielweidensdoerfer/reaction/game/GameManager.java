@@ -22,7 +22,7 @@ public class GameManager {
     private int mActWidth, mActHeight;
 
     public int time = 10; //seconds
-    public int numRound = 1;
+    public int currentRound = 10;
     public String task = "Remove all dollar and euro circles";
 
     public GameManager(ReactionActivity activity) {
@@ -117,7 +117,7 @@ public class GameManager {
     }
 
     public void nextRound() {
-        mAct.gameView.setItemField(GridGenerator.generate(1));
+        mAct.gameView.setItemField(GridGenerator.generate(currentRound).field);
         mAct.loadingView.blowUp();
     }
 

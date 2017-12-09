@@ -2,9 +2,11 @@ package com.danielweidensdoerfer.reaction.game.generator;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.danielweidensdoerfer.reaction.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -94,6 +96,14 @@ public class GridGenerator {
 
     private static ArrayList<Item> sItems = new ArrayList<>();
 
+    private static LevelConfig[] configs = new LevelConfig[] {
+            new LevelConfig(3, 4, 4, 5000, 3000, 1, 1),
+            new LevelConfig(4, 5, 5, 8000, 4000, 1, 3),
+            new LevelConfig(4, 6, 5, 8000, 5000, 3, 5),
+            new LevelConfig(5, 7, 5, 10000, 6000, 2, 4)
+    };
+    private static int configIndex = 0;
+
     private static  Random random = new Random();
 
     public static void init(Context context) {
@@ -122,6 +132,8 @@ public class GridGenerator {
         };
 
         long id = 0;
+
+
 
         //social media
         sFacebook = new Item(id++, context, R.drawable.img_scm_facebook, SOCIAL_MEDIA);
@@ -236,24 +248,57 @@ public class GridGenerator {
         sMelon = new Item(id++, context, R.drawable.img_fr_melon, FRUIT);
         sPear = new Item(id++, context, R.drawable.img_fr_pear, FRUIT);
 
-        sItems.add(sBanana);
-        sItems.add(sApple);
-        sItems.add(sMelon);
-        sItems.add(sPear);
+//        sItems.add(sBanana);
+//        sItems.add(sApple);
+//        sItems.add(sMelon);
+//        sItems.add(sPear);
     }
 
-    public static Item[][] generate(int round) {
-        //int cols = random.nextInt(7)+3;
-        //int rows = random.nextInt(7)+3;
-        int cols = 7;
-        int rows = 11;
-        int total = cols*rows;
-        Item[][] result = new Item[cols][rows];
+    private static LevelConfig findConfig(int round) {
+        int r = 0;
+        for(int i = 0; i < configs.length; i++) {
+            if(configs[i].numRounds + r >= round) {
+                configs[i].setCurrentRound(round-r);
+                return configs[i];
+            }
+            r += configs[i].numRounds;
+        }
+        return null;
+    }
 
-        create(result, CREATE_ITEM_CAT);
+    public static GeneratorResult generate(int round) {
+        LevelConfig config = findConfig(round);
 
-        colorize(result, COLORIZE_ITEM_BOUNDED);
-        return result;
+        Item[][] field = new Item[config.cols][config.rows];
+
+        create(field, CREATE_ITEM_CAT);
+
+        colorize(field, COLORIZE_RANDOM);
+
+        Object[] targets = new Object[config.targets()];
+
+        fillTargets(targets, field);
+
+        return new GeneratorResult(field, targets, config.time());
+    }
+
+    private static void fillTargets(Object[] targets, Item[][] field) {
+        ArrayList<Item> items = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[i].length; j++) {
+                if(!items.contains(field[i][j])) items.add(field[i][j]);
+                if(!colors.contains(field[i][j].color)) colors.add(field[i][j].color);
+            }
+        }
+        for (int i = 0; i < targets.length; i++) {
+            int r = random.nextInt(2);
+            if(r == 0) {
+                targets[i] = new ItemTarget(items.get(random.nextInt(items.size())));
+            } else {
+                targets[i] = new ColorTarget(colors.get(random.nextInt(colors.size())));
+            }
+        }
     }
 
     private static void create(Item[][] field, int mode) {
@@ -272,8 +317,9 @@ public class GridGenerator {
                 for (Item item : sItems) {
                     if(item.tags.contains(tag)) tagItems.add(item);
                 }
+                Log.d("sdlkfj", "tagItems.size::" + tagItems.size());
                 //create for chosen items
-                create(field, tagItems, tagItems.size());
+                create(field, tagItems, Math.min(5, tagItems.size()));
                 break;
 
             case CREATE_ALL_ITEMS:
@@ -323,7 +369,7 @@ public class GridGenerator {
         int cols = field.length;
         int rows = field[0].length;
         int total = rows*cols;
-        int colorCount = 0;
+        int colorCount;
         ArrayList<Integer> colors = new ArrayList<>();
         switch(mode) {
             case COLORIZE_RANDOM:
@@ -391,5 +437,20 @@ public class GridGenerator {
         }
     }
 
+    static class ColorTarget {
+        final int color;
+
+        public ColorTarget(int color) {
+            this.color = color;
+        }
+    }
+
+    static class ItemTarget {
+        final Item item;
+
+        public ItemTarget(Item item) {
+            this.item = item;
+        }
+    }
 
 }

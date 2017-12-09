@@ -10,7 +10,7 @@ abstract class Tag {
     static final int SOCIAL_MEDIA = 5;
 
     static final int[] tags = {
-            FRUIT,
+//            FRUIT,
             CURRENCY,
             NUMBER,
             EMOJI,

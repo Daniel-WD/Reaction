@@ -237,7 +237,7 @@ public class LoadingView extends View {
         });
         enterRoundText.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
-                mPText = mAct.getString(R.string.current_round_template, mAct.gameManager.numRound);
+                mPText = mAct.getString(R.string.current_round_template, mAct.gameManager.currentRound);
                 createTextLayouts();
             }
             @Override public void onAnimationEnd(Animator animation) {}
