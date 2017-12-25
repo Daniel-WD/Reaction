@@ -1,0 +1,38 @@
+<!-- drawable/close.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/cross_width"
+    android:height="@dimen/cross_height"
+    android:viewportHeight="@integer/cross_viewportHeight"
+    android:viewportWidth="@integer/cross_viewportWidth">
+
+    <group android:name="@string/cross_group"
+        android:pivotX="@integer/cross_viewport_center_x"
+        android:pivotY="@integer/cross_viewport_center_y">
+        <path
+            android:name="@string/cross_path_a"
+            android:strokeWidth="2"
+            android:pathData="@string/cross_path_data_a"
+            android:strokeColor="@color/dark_snow" />
+
+        <path
+            android:name="@string/cross_path_b"
+            android:strokeWidth="2"
+            android:pathData="@string/cross_path_data_b"
+            android:strokeColor="@color/dark_snow" />
+
+        <path
+            android:trimPathEnd="0"
+            android:name="@string/cross_path_a"
+            android:strokeWidth="2"
+            android:pathData="@string/cross_path_data_a"
+            android:strokeColor="@color/dark_pink" />
+
+        <path
+            android:trimPathEnd="0"
+            android:name="@string/cross_path_b"
+            android:strokeWidth="2"
+            android:pathData="@string/cross_path_data_b"
+            android:strokeColor="@color/dark_pink"/>
+    </group>
+
+</vector>

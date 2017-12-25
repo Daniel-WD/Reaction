@@ -3,6 +3,8 @@
     <string name="app_name_caps">REACTION</string>
     <string name="settings">Settings</string>
 
+    <string name="remove">REMOVE</string>
+
     <string name="points_template">%1$s Points</string>
     <string name="played_rounds_template">Played Rounds: %1$s</string>
     <string name="round_record_template">Round Record: %1$s</string>

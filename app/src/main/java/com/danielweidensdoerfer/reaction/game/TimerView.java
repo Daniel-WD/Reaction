@@ -1,5 +1,6 @@
 package com.danielweidensdoerfer.reaction.game;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,7 +17,6 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.OvershootInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
@@ -24,7 +24,8 @@ import com.danielweidensdoerfer.reaction.ReactionActivity;
 public class TimerView extends View {
 
     //constants
-    private static final float STROKE_WIDTH = 4;
+    private static final float C_STROKE_WIDTH = 10;
+    private static final float W_STROKE_WIDTH = 4;
 
     //text
     private StaticLayout mTLayout;
@@ -36,8 +37,10 @@ public class TimerView extends View {
     private String mText = "";
 
     //circle
-    private Paint mCPaint, mBPaint;
+    private Paint mCPaint, mBPaint, mWPaint;
     private float mBScale = 0;
+    private float mWScale = 1;
+    private float mWDegrees = 0;
 
     //metrics
     private float mWidth, mHeight, mCenterX, mCenterY;
@@ -60,6 +63,10 @@ public class TimerView extends View {
         mBPaint.setStyle(Paint.Style.FILL);
         mBPaint.setColor(ContextCompat.getColor(context, R.color.dark_dark_nero));
 
+        mWPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mWPaint.setStyle(Paint.Style.FILL);
+        mWPaint.setColor(ContextCompat.getColor(context, R.color.snow));
+
         mTPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mTPaint.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
         mTPaint.setColor(ContextCompat.getColor(context, R.color.pink));
@@ -79,13 +86,22 @@ public class TimerView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawCircle(mCenterX, mCenterY, mWidth/2, mCPaint);
-
+        //white
         canvas.save();
-        canvas.scale(mBScale, mBScale, mWidth/2, mHeight/2);
-        canvas.drawCircle(mCenterX, mCenterY, mWidth/2-STROKE_WIDTH/2, mBPaint);
+        canvas.scale(mWScale, mWScale, mWidth/2, mHeight/2);
+        canvas.drawArc(0, 0, mWidth, mHeight, -90, mWDegrees, true, mWPaint);
         canvas.restore();
 
+        //color
+        canvas.drawCircle(mCenterX, mCenterY, mWidth/2- (W_STROKE_WIDTH) /2, mCPaint);
+
+        //background
+        canvas.save();
+        canvas.scale(mBScale, mBScale, mWidth/2, mHeight/2);
+        canvas.drawCircle(mCenterX, mCenterY, mWidth/2- (C_STROKE_WIDTH + W_STROKE_WIDTH) /2, mBPaint);
+        canvas.restore();
+
+        //text
         if(mTLayout != null) {
             canvas.save();
             canvas.scale(mTScale, mTScale, mWidth/2, mHeight/2);
@@ -102,6 +118,18 @@ public class TimerView extends View {
 
         //open anim
         ObjectAnimator openAnim = ObjectAnimator.ofFloat(this, "bScale", 0, 1);
+        openAnim.addUpdateListener(animation -> {
+            float f = animation.getAnimatedFraction();
+            mWDegrees = 360 * (f);
+        });
+        openAnim.addListener(new Animator.AnimatorListener() {
+            @Override public void onAnimationEnd(Animator animation) {
+                mAct.gameManager.lose();
+            }
+            @Override public void onAnimationStart(Animator animation) {}
+            @Override public void onAnimationCancel(Animator animation) {}
+            @Override public void onAnimationRepeat(Animator animation) {}
+        });
         openAnim.setStartDelay(delay);
         openAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         openAnim.setDuration(200);
@@ -110,14 +138,18 @@ public class TimerView extends View {
         delay += 50;
         mHandler.postDelayed(() -> {
             mAct.gameView.show();
+            mAct.crossView.show();
         }, delay);
 
     }
 
     public void start() {
-        if(true) return;
         //countdown
         ObjectAnimator countdown = ObjectAnimator.ofInt(this, "time", Integer.parseInt(mText), 0);
+        countdown.addUpdateListener(animation -> {
+            float f = animation.getAnimatedFraction();
+            mWDegrees = 360 * (1-f);
+        });
         countdown.setInterpolator(new LinearInterpolator());
         countdown.setDuration(Integer.parseInt(mText)*1000);
         countdown.start();
@@ -131,14 +163,19 @@ public class TimerView extends View {
         mTY = mCenterY - mTLayout.getHeight()/2;
     }
 
+    public void setTime(int time) {
+        mText = String.valueOf(time);
+        createTextLayouts();
+        invalidate();
+    }
+
     public void setBScale(float scale) {
         mBScale = scale;
         invalidate();
     }
 
-    public void setTime(int time) {
-        mText = String.valueOf(time);
-        createTextLayouts();
+    public void setWScale(float scale) {
+        mWScale = scale;
         invalidate();
     }
 

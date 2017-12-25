@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Metrics -->
+    <dimen name="cross_width">24dp</dimen>
+    <dimen name="cross_height">24dp</dimen>
+    <integer name="cross_viewportWidth">24</integer>
+    <integer name="cross_viewportHeight">24</integer>
+    <integer name="cross_viewport_center_x">12</integer>
+    <integer name="cross_viewport_center_y">12</integer>
+
+    <!-- Paths -->
+    <string name="cross_path_data_a">M 5 5 L 19 19</string>
+    <string name="cross_path_data_b">M 5 19 L 19 5</string>
+
+    <!-- Names -->
+    <string name="cross_path_a">cross_path_a</string>
+    <string name="cross_path_b">cross_path_b</string>
+    <string name="cross_group">cross_group</string>
+
+    <!-- Durations -->
+    <integer name="cross_path_a_dur">150</integer>
+    <integer name="cross_path_b_dur">150</integer>
+    <integer name="cross_rot_dur">300</integer>
+</resources>

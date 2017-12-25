@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.danielweidensdoerfer.reaction.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -114,7 +113,7 @@ public class GridGenerator {
                 ContextCompat.getColor(context, R.color._3),
                 ContextCompat.getColor(context, R.color._4),
                 ContextCompat.getColor(context, R.color._5),
-                ContextCompat.getColor(context, R.color._6),
+//                ContextCompat.getColor(context, R.color._6),
                 ContextCompat.getColor(context, R.color._7),
 //                ContextCompat.getColor(context, R.color._8),
                 ContextCompat.getColor(context, R.color._9),
@@ -229,7 +228,7 @@ public class GridGenerator {
         sSeven = new Item(id++, context, R.drawable.img_num_7, NUMBER);
         sEight = new Item(id++, context, R.drawable.img_num_8, NUMBER);
         sNine = new Item(id++, context, R.drawable.img_num_9, NUMBER);
-        sZero = new Item(id++, context, R.drawable.ic_zero, NUMBER);
+        sZero = new Item(id++, context, R.drawable.img_num_0, NUMBER);
 
         sItems.add(sOne);
         sItems.add(sTwo);
@@ -275,14 +274,14 @@ public class GridGenerator {
 
         colorize(field, COLORIZE_RANDOM);
 
-        Object[] targets = new Object[config.targets()];
+        Target[] targets = new Target[config.targets()];
 
         fillTargets(targets, field);
 
         return new GeneratorResult(field, targets, config.time());
     }
 
-    private static void fillTargets(Object[] targets, Item[][] field) {
+    private static void fillTargets(Target[] targets, Item[][] field) {
         ArrayList<Item> items = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
         for (int i = 0; i < field.length; i++) {
@@ -292,11 +291,13 @@ public class GridGenerator {
             }
         }
         for (int i = 0; i < targets.length; i++) {
-            int r = random.nextInt(2);
+            int r = random.nextInt(1);
             if(r == 0) {
-                targets[i] = new ItemTarget(items.get(random.nextInt(items.size())));
+                targets[i] = new Target.ItemTarget(items.get(random.nextInt(items.size())).copy());
+                Log.d("tag", "item");
             } else {
-                targets[i] = new ColorTarget(colors.get(random.nextInt(colors.size())));
+                targets[i] = new Target.ColorTarget(colors.get(random.nextInt(colors.size())));
+                Log.d("tag", "color");
             }
         }
     }
@@ -434,22 +435,6 @@ public class GridGenerator {
             case COLORIZE_ITEM_CAT_BOUNDED:
 
                 break;
-        }
-    }
-
-    static class ColorTarget {
-        final int color;
-
-        public ColorTarget(int color) {
-            this.color = color;
-        }
-    }
-
-    static class ItemTarget {
-        final Item item;
-
-        public ItemTarget(Item item) {
-            this.item = item;
         }
     }
 

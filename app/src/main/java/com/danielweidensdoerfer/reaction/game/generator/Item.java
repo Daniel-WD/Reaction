@@ -27,14 +27,15 @@ public class Item {
         }
     }
 
-    Item(long id, Drawable d, ArrayList<Integer> ts) {
+    Item(long id, Drawable d, int c, ArrayList<Integer> ts) {
         this.id = id;
         drawable = d;
         tags = new ArrayList<>(ts);
+        color = c;
     }
 
     Item copy() {
-        return new Item(id, drawable, tags);
+        return new Item(id, drawable, color, tags);
     }
 
 }

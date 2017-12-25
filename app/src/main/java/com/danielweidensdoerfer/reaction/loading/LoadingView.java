@@ -1,4 +1,4 @@
-package com.danielweidensdoerfer.reaction;
+package com.danielweidensdoerfer.reaction.loading;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -24,6 +24,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import com.danielweidensdoerfer.reaction.R;
+import com.danielweidensdoerfer.reaction.ReactionActivity;
+
 public class LoadingView extends View {
 
     //constants
@@ -43,6 +46,9 @@ public class LoadingView extends View {
     private int mTLWidth;
     private String mPText = "", mSText = "";
     private float mPTScale = 1f, mSTScale = 1f;
+
+    //Targetlayout
+    private TargetLayout mTargetLayout;
 
     //circle stuff
     private RectF mMainRect, mBgRect;
@@ -124,6 +130,10 @@ public class LoadingView extends View {
         radius -= CIRCLE_STROKE_WIDTH/2;
         mBgRect = new RectF(mWidth/2-radius, mHeight/2-radius,
                 mWidth - (mWidth/2-radius), mHeight/2+radius);
+
+        float targetsHeight = radius/2.3f;
+        mTargetLayout = new TargetLayout(getContext(), mBgRect.left, mBgRect.centerY()-targetsHeight/4,
+                mBgRect.width(), targetsHeight);
     }
 
     @Override
@@ -165,17 +175,21 @@ public class LoadingView extends View {
                 360-2*(mOFill), false, mOPaint);
 
         //Outdoor
-        //canvas.drawCircle(mCenterX, mCenterY, mMainRect.width()/2+OUTDOOR_OVERLAY_STRENGTH/2, mODPaint);
+        //canvas.drawCircle(mCenterX, mCenterY, mMainRect.mWidth()/2+OUTDOOR_OVERLAY_STRENGTH/2, mODPaint);
 
         //indicator circle
         float cx = mCenterX + (float)Math.sin(Math.toRadians(mIDegrees))*mICenterRadius;
         float cy = mCenterY - (float)Math.cos(Math.toRadians(mIDegrees))*mICenterRadius;
         canvas.drawCircle(cx, cy, mIRadius, mIPaint);
+
+        mTargetLayout.draw(canvas);
     }
 
     public void blowUp() {
         setVisibility(VISIBLE);
         long delay = 0;
+
+        mTargetLayout.setTargets(mAct.gameManager.generatorResult.targets);
 
         //collapse indicator to 1/3
         ObjectAnimator collapseIOne = ObjectAnimator.ofFloat(this, "iRadius",
@@ -200,12 +214,12 @@ public class LoadingView extends View {
         });
         createCircle.setStartDelay(delay);
         createCircle.setInterpolator(new AccelerateDecelerateInterpolator());
-        createCircle.setDuration(500);
+        createCircle.setDuration(400);
         createCircle.start();
 
-        delay += 500;
+        delay += 400;
 
-        //move indicator down
+        //move indicator down and overlay fill
         ObjectAnimator moveIndicator = ObjectAnimator.ofFloat(this, "iCenterRadius",
                 calcMaxICenterRadius(), -calcMaxICenterRadius());
         moveIndicator.addUpdateListener(animation -> {
@@ -263,42 +277,56 @@ public class LoadingView extends View {
         exitRoundText.setInterpolator(new AccelerateInterpolator());
         exitRoundText.start();
 
-        delay += 100;
+        delay += 200;
 
-        //enter task text - secondary
-        ObjectAnimator enterTaskText = ObjectAnimator.ofFloat(this, "translationSTY", -calcMaxRadius()/2, 0);
-        enterTaskText.addUpdateListener(animation -> {
+        //enter remove text - secondary
+        ObjectAnimator enterRemoveText = ObjectAnimator.ofFloat(this, "translationSTY", -calcMaxRadius()/2, 0);
+        enterRemoveText.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
             if(fraction > 1) return;
             mSTPaint.setAlpha((int)(255 * fraction));
         });
-        enterTaskText.addListener(new Animator.AnimatorListener() {
+        enterRemoveText.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
-                mSText = mAct.gameManager.task;
+                mSTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.removeTextSize));
+                mSText = mAct.getString(R.string.remove);
                 createTextLayouts();
+                mSTY = mTargetLayout.mY - mSTLayout.getHeight();
             }
             @Override public void onAnimationEnd(Animator animation) {}
             @Override public void onAnimationCancel(Animator animation) {}
             @Override public void onAnimationRepeat(Animator animation) {}
         });
-        enterTaskText.setStartDelay(delay);
-        enterTaskText.setDuration(200);
-        enterTaskText.setInterpolator(new DecelerateInterpolator());
-        enterTaskText.start();
+        enterRemoveText.setStartDelay(delay);
+        enterRemoveText.setDuration(200);
+        enterRemoveText.setInterpolator(new DecelerateInterpolator());
+        enterRemoveText.start();
 
-        delay += 200 + getResources().getInteger(R.integer.showTaskDuration);
+        delay += 0;
 
-        //exit task text - secondary
-        ObjectAnimator exitTaskText = ObjectAnimator.ofFloat(this, "translationSTY", 0, calcMaxRadius()/2);
-        exitTaskText.addUpdateListener(animation -> {
+        mHandler.postDelayed(() -> {
+            mTargetLayout.show();
+        }, delay);
+
+        delay += getResources().getInteger(R.integer.showTargetsDuration);
+
+        mHandler.postDelayed(() -> {
+            mTargetLayout.hide();
+        }, delay);
+
+        delay += 100;
+
+        //exit remove text - secondary
+        ObjectAnimator exitRemoveText = ObjectAnimator.ofFloat(this, "translationSTY", 0, calcMaxRadius()/2);
+        exitRemoveText.addUpdateListener(animation -> {
             float fraction = animation.getAnimatedFraction();
             if(fraction > 1) return;
             mSTPaint.setAlpha((int)(255 * (1-fraction)));
         });
-        exitTaskText.setStartDelay(delay);
-        exitTaskText.setDuration(200);
-        exitTaskText.setInterpolator(new AccelerateInterpolator());
-        exitTaskText.start();
+        exitRemoveText.setStartDelay(delay);
+        exitRemoveText.setDuration(200);
+        exitRemoveText.setInterpolator(new AccelerateInterpolator());
+        exitRemoveText.start();
 
         delay += 200;
 
@@ -342,7 +370,12 @@ public class LoadingView extends View {
 
         delay += 200;
 
+        //--------------------------COUNTDOWN----------------------------
         //countdown
+
+        long numberMoveDuration = 200;
+        long numberShowDuration = getResources().getInteger(R.integer.showCountdownNumberDuration);
+
         //dash animation
         final float dashLength = (float)(Math.PI* mMainRect.width() /24f);
         ValueAnimator dashAnim = ValueAnimator.ofFloat(dashLength, 0);
@@ -365,11 +398,9 @@ public class LoadingView extends View {
         dashAnim.setRepeatMode(ValueAnimator.REVERSE);
         dashAnim.setRepeatCount(1);
         dashAnim.setStartDelay(delay);
-        dashAnim.setDuration(1200);
+        dashAnim.setDuration((3*numberShowDuration+5*numberMoveDuration)/2);
         dashAnim.setInterpolator(new LinearInterpolator());
         dashAnim.start();
-
-        long numberMoveDuration = 200;
 
         //enter three - secondary
         ObjectAnimator enterThree = ObjectAnimator.ofFloat(this, "translationSTY", -calcMaxRadius()/3, 0);
@@ -398,7 +429,7 @@ public class LoadingView extends View {
         enterThree.setInterpolator(new DecelerateInterpolator());
         enterThree.start();
 
-        delay += numberMoveDuration + getResources().getInteger(R.integer.showCountdownNumberDuration);
+        delay += numberMoveDuration + numberShowDuration;
 
         //exit three - secondary
         ObjectAnimator exitThree = ObjectAnimator.ofFloat(this, "translationSTY", 0, calcMaxRadius()/3);
@@ -435,7 +466,7 @@ public class LoadingView extends View {
         enterTwo.setInterpolator(new DecelerateInterpolator());
         enterTwo.start();
 
-        delay += numberMoveDuration + getResources().getInteger(R.integer.showCountdownNumberDuration);
+        delay += numberMoveDuration + numberShowDuration;
 
         //exit two - primary
         ObjectAnimator exitTwo = ObjectAnimator.ofFloat(this, "translationPTY", 0, calcMaxRadius()/3);
@@ -472,7 +503,7 @@ public class LoadingView extends View {
         enterOne.setInterpolator(new DecelerateInterpolator());
         enterOne.start();
 
-        delay += numberMoveDuration + getResources().getInteger(R.integer.showCountdownNumberDuration);
+        delay += numberMoveDuration + numberShowDuration;
 
         //exit one - secondary
         ObjectAnimator exitOne = ObjectAnimator.ofFloat(this, "translationSTY", 0, calcMaxRadius()/3);
@@ -513,6 +544,7 @@ public class LoadingView extends View {
     }
 
     private void createTextLayouts() {
+        //NOTE mSTX, mSTY, mPTX, mPTY will be set automatically
         mTLWidth = (int)(calcMaxRadius()* TEXT_REL_RADIUS_WIDTH);
         mPTLayout = new StaticLayout(mPText, mPTPaint, mTLWidth, Layout.Alignment.ALIGN_CENTER,
                 1, 0, false);

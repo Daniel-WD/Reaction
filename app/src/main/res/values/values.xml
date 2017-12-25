@@ -6,16 +6,24 @@
 
     <dimen name="currentRoundSize">43sp</dimen>
     <dimen name="currentTaskSize">27sp</dimen>
+    <dimen name="removeTextSize">29sp</dimen>
     <dimen name="timeNumberSize">52sp</dimen>
     <dimen name="countdownNumberSize">90sp</dimen>
 
     <dimen name="timerTextSize">24sp</dimen>
 
     <integer name="showRoundDuration">600</integer>
-    <integer name="showTaskDuration">600</integer>
-    <integer name="showTimeDuration">800</integer>
-    <integer name="showCountdownNumberDuration">400</integer>
+    <integer name="showTargetsDuration">2000</integer>
+    <integer name="showTimeDuration">1000</integer>
+    <integer name="showCountdownNumberDuration">350</integer>
 
     <!-- GameView -->
     <dimen name="blockPadding">10dp</dimen>
+
+    <!-- LoadingView -->
+    <dimen name="previewBlockPadding">4dp</dimen>
+
+    <!-- CrossView -->
+    <dimen name="crossBlockPadding">4dp</dimen>
+
 </resources>

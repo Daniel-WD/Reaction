@@ -3,4 +3,5 @@
     <declare-styleable name="LoadingView"/>
     <declare-styleable name="TimerView"/>
     <declare-styleable name="GameView"/>
+    <declare-styleable name="CrossView"/>
 </resources>

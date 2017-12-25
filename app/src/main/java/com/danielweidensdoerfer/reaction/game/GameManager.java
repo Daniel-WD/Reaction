@@ -12,6 +12,7 @@ import android.view.animation.OvershootInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
+import com.danielweidensdoerfer.reaction.game.generator.GeneratorResult;
 import com.danielweidensdoerfer.reaction.game.generator.GridGenerator;
 import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
 import com.danielweidensdoerfer.reaction.utils.ViewUtils;
@@ -21,9 +22,9 @@ public class GameManager {
     private ReactionActivity mAct;
     private int mActWidth, mActHeight;
 
-    public int time = 10; //seconds
-    public int currentRound = 10;
-    public String task = "Remove all dollar and euro circles";
+    public int time = 5; //seconds
+    public int currentRound = 4;
+    public GeneratorResult generatorResult = null;
 
     public GameManager(ReactionActivity activity) {
         mAct = activity;
@@ -60,7 +61,7 @@ public class GameManager {
 
                         //
                         mAct.handler.postDelayed(() -> {
-                            mAct.btnStart.setImageDrawable(mAct.getDrawable(R.drawable.bg_start_overlay));
+                            //mAct.btnStart.setImageDrawable(mAct.getDrawable(R.drawable.bg_start_overlay));
                         }, 2*mAct.getResources().getInteger(R.integer.pc_duration));
                     }
                     @Override public void onAnimationEnd(Animator animation) {
@@ -117,7 +118,9 @@ public class GameManager {
     }
 
     public void nextRound() {
-        mAct.gameView.setItemField(GridGenerator.generate(currentRound).field);
+        generatorResult = GridGenerator.generate(currentRound);
+        time = (int)generatorResult.time/1000;
+        mAct.gameView.setItemField(generatorResult.field, generatorResult.targets);
         mAct.loadingView.blowUp();
     }
 
@@ -148,6 +151,14 @@ public class GameManager {
         mAct.handler.postDelayed(() -> {
             mAct.timerView.show();
         }, delay);
+    }
+
+    public void lose() {
+
+    }
+
+    public void win() {
+
     }
 
 }

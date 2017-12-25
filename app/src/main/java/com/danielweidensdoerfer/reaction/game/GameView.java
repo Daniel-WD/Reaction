@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -20,8 +19,8 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
-import com.danielweidensdoerfer.reaction.game.generator.GridGenerator;
 import com.danielweidensdoerfer.reaction.game.generator.Item;
+import com.danielweidensdoerfer.reaction.game.generator.Target;
 
 public class GameView extends View {
 
@@ -40,6 +39,8 @@ public class GameView extends View {
 
     private float[][][] mValues;/*cols|rows|x, y, alpha, scale, rotation, translationX, translationY*/
     private boolean[][] mClicked;
+    private boolean[][] mTarget; //true if target, false otherwise
+    private int mTargetCount = 0;
 
     private ReactionActivity mAct;
 
@@ -79,6 +80,10 @@ public class GameView extends View {
             }
         }
         onSizeChanged(getWidth(), getHeight(), getWidth(), getHeight());
+        bindItemField();
+    }
+
+    private void bindItemField() {
         for(int i = 0; i < mCols; i++) {
             for(int j = 0; j < mRows; j++){
                 mItemField[i][j].drawable.setBounds(0, 0, (int)mBlockSize, (int)mBlockSize);
@@ -178,20 +183,30 @@ public class GameView extends View {
             case MotionEvent.ACTION_DOWN:
                 int[] pos = findColRowByLocation(event.getX(event.getActionIndex()), event.getY(event.getActionIndex()));
                 if(pos == null || mClicked[pos[0]][pos[1]]) return true;
+                if(mTarget[pos[0]][pos[1]]) {
+                    //clicked target
+                    if(--mTargetCount == 0) mAct.gameManager.win();
+                } else {
+                    //clicked wrong pos
+                    mAct.crossView.nextCross();
+                    // TODO: 23.12.2017 add cross to fails view and ...vibrate... ;)
+                }
                 mClicked[pos[0]][pos[1]] = true;
 
+                //rotation direction
                 final float f = (event.getX(event.getActionIndex()) - (mValues[pos[0]][pos[1]][0] + mBlockSize/2)) / (mBlockSize/2);
 
+                // TODO: 23.12.2017 auslagern :D
                 Path p = new Path();
                 p.moveTo(0, 0);
                 p.cubicTo(0.7f, 0, 1, 0.3f, 1, 1);
                 PathMeasure pm = new PathMeasure(p, false);
                 float[] pathPos = new float[2];
 
-                ValueAnimator fadeOut = ValueAnimator.ofFloat(0, 1);
-                fadeOut.setDuration(400);
-                fadeOut.setInterpolator(new AccelerateInterpolator(0.5f));
-                fadeOut.addUpdateListener(animation -> {
+                ValueAnimator fallDown = ValueAnimator.ofFloat(0, 1);
+                fallDown.setDuration(400);
+                fallDown.setInterpolator(new AccelerateInterpolator(0.5f));
+                fallDown.addUpdateListener(animation -> {
                     float v = (float) animation.getAnimatedValue();
                     //mValues[pos[0]][pos[1]][2] = 1-v;
                     //mValues[pos[0]][pos[1]][3] = 1+v;
@@ -203,13 +218,14 @@ public class GameView extends View {
 
                     invalidate();
                 });
-                fadeOut.start();
+                fallDown.start();
                 return true;
         }
         return super.onTouchEvent(event);
     }
 
     void show() {
+        bindItemField();
         setVisibility(VISIBLE);
 
         long delay = 0;
@@ -274,11 +290,27 @@ public class GameView extends View {
         return null;
     }
 
-    public void setItemField(Item[][] field) {
+    public void setItemField(Item[][] field,  Target[] targets) {
         if(field == null) return;
+        mTargetCount = 0;
         mItemField = field;
         mCols = mItemField.length;
         mRows = mItemField[0].length;
+
+        mTarget = new boolean[mCols][mRows];
+        for(int i = 0; i < mCols; i++) {
+            for(int j = 0; j < mRows; j++) {
+                Item item = mItemField[i][j];
+                for (Target target : targets) {
+                    if(target.isTarget(item)) {
+                        mTarget[i][j] = true;
+                        mTargetCount++;
+                        break;
+                    } else mTarget[i][j] = false;
+                }
+            }
+        }
+
         init();
         invalidate();
     }

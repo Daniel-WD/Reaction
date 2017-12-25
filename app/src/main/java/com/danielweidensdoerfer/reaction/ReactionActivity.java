@@ -14,8 +14,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.danielweidensdoerfer.reaction.game.CrossView;
 import com.danielweidensdoerfer.reaction.game.GameManager;
 import com.danielweidensdoerfer.reaction.game.GameView;
+import com.danielweidensdoerfer.reaction.loading.LoadingView;
 import com.danielweidensdoerfer.reaction.game.TimerView;
 import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
 
@@ -33,6 +35,7 @@ public class ReactionActivity extends AppCompatActivity {
     public TimerView timerView;
     public GameView gameView;
     public View gameBackground;
+    public CrossView crossView;
     //public TextView tvTask;
 
     public Handler handler = new Handler();
@@ -59,6 +62,7 @@ public class ReactionActivity extends AppCompatActivity {
         timerView = findViewById(R.id.timeView);
         gameView = findViewById(R.id.gameView);
         gameBackground = findViewById(R.id.gameBackground);
+        crossView = findViewById(R.id.crossView);
         //tvTask = findViewById(R.id.tvTask);
 
         btnStart.setOnClickListener(v -> {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_cross">
+
+    <target
+        android:name="@string/cross_path_a"
+        android:animation="@animator/cross_path_a_animation" />
+
+    <target
+        android:name="@string/cross_path_b"
+        android:animation="@animator/cross_path_b_animation" />
+
+    <target
+        android:name="@string/cross_group"
+        android:animation="@animator/cross_group_animation" />
+
+</animated-vector>
