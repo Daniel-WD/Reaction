@@ -26,4 +26,7 @@
     <!-- CrossView -->
     <dimen name="crossBlockPadding">4dp</dimen>
 
+    <!-- GameBackground -->
+    <dimen name="strokeWidth">1dp</dimen>
+
 </resources>

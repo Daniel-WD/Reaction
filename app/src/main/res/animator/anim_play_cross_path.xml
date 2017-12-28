@@ -3,6 +3,6 @@
     android:propertyName="pathData"
     android:duration="@integer/pc_duration"
     android:valueFrom="@string/play_path_data"
-    android:valueTo="@string/circle_path_data"
+    android:valueTo="@string/circle_one_path_data"
     android:valueType="pathType"
     android:interpolator="@android:interpolator/accelerate_decelerate"/>

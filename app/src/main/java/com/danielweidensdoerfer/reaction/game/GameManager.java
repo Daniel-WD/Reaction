@@ -2,12 +2,16 @@ package com.danielweidensdoerfer.reaction.game;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.AnimatedVectorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
@@ -22,8 +26,14 @@ public class GameManager {
     private ReactionActivity mAct;
     private int mActWidth, mActHeight;
 
+    public static final int BONUS_FOR_TIME = 20;
+
+    public int bonusPointsFactor = 0;
+    public int bonusPoints = BONUS_FOR_TIME;
+    public int newPoints = 300;
+    public int points = 0;
     public int time = 5; //seconds
-    public int currentRound = 4;
+    public int currentRound = 14;
     public GeneratorResult generatorResult = null;
 
     public GameManager(ReactionActivity activity) {
@@ -55,7 +65,7 @@ public class GameManager {
                     @Override public void onAnimationStart(Animator animation) {
                         //play to circle anim
                         AnimatedVectorDrawable drawable = (AnimatedVectorDrawable)
-                                mAct.getResources().getDrawable(R.drawable.anim_play_to_circle, mAct.getTheme());
+                                mAct.getResources().getDrawable(R.drawable.avd_play_to_circle, mAct.getTheme());
                         mAct.btnStart.setImageDrawable(drawable);
                         drawable.start();
 
@@ -154,11 +164,397 @@ public class GameManager {
     }
 
     public void lose() {
+        win();
 
     }
 
     public void win() {
+        mAct.timerView.stop();
+        mAct.gameView.setEnabled(false);
+        mAct.handler.postDelayed(() -> {
+            mAct.crossView.hide();
+            mAct.gameView.hide();
+        }, mAct.getResources().getInteger(R.integer.cross_rot_dur) + 200);
 
+        // TODO: 25.12.2017  mAct.getResources().getInteger(R.integer.cross_rot_dur) only for lose
+
+        long delay = 400 + mAct.getResources().getInteger(R.integer.cross_rot_dur) + 200;
+
+        //move timeView to center relative-->translate
+        Path path = new Path();
+        float endX = mActWidth/2-mAct.timerView.getWidth()/2;
+        float endY = mActHeight/2-mAct.timerView.getHeight()/2;
+        float xDist = mAct.timerView.getX()-endX;
+        float yDist = endY-mAct.timerView.getY();
+        path.moveTo(0, 0);
+        path.cubicTo(-xDist/2, 0,
+                -xDist, yDist/2,
+                -xDist, yDist);
+
+        ObjectAnimator moveTVAnim = ObjectAnimator.ofFloat(mAct.timerView,
+                "translationX", "translationY", path);
+        moveTVAnim.setStartDelay(delay);
+        moveTVAnim.setDuration(200);
+        moveTVAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+        moveTVAnim.start();
+
+        //hide timerview
+        mAct.handler.postDelayed(() -> {
+            mAct.timerView.hide();
+        }, delay);
+
+        //scale game bg
+        mAct.gameBackground.setVisibility(View.VISIBLE);
+        mAct.gameBackground.setPivotY(mAct.gameBackground.getHeight()/2);
+        scaleGameBg(delay, 300, mAct.ivCrossTick);
+
+        delay += 200;
+        mAct.handler.postDelayed(() -> {
+            //switch and show tick
+            mAct.timerView.setVisibility(View.INVISIBLE);
+            mAct.ivCrossTick.setVisibility(View.VISIBLE);
+
+            float s = (float)mAct.timerView.getWidth()/(float)mAct.ivCrossTick.getWidth();
+            mAct.ivCrossTick.setScaleX(s);
+            mAct.ivCrossTick.setScaleY(s);
+            AnimatedVectorDrawable avdTick = (AnimatedVectorDrawable)
+                    mAct.getResources().getDrawable(R.drawable.avd_circle_to_tick, mAct.getTheme());
+            mAct.ivCrossTick.setImageDrawable(avdTick);
+            avdTick.start();
+
+            //scale tick
+            mAct.ivCrossTick.animate()
+                    .setStartDelay(0)
+                    .setDuration(200)
+                    .setInterpolator(new OvershootInterpolator(2))
+                    .scaleX(1)
+                    .scaleY(1)
+                    .start();
+        }, delay);
+
+        delay += 100;
+
+        //show lines
+        mAct.handler.postDelayed(() -> {
+            mAct.gameBackground.showLines();
+        }, delay);
+
+        //translate y of tick
+        mAct.handler.postDelayed(() -> {
+            float tY = -mAct.tvGamePoints.getHeight();
+            mAct.ivCrossTick.setTranslationY(tY);
+            scaleGameBg(0, 200, mAct.ivCrossTick, mAct.tvGamePoints, mAct.tvNewGamePoints);
+            mAct.ivCrossTick.setTranslationY(0);
+            mAct.ivCrossTick.animate()
+                    .setStartDelay(0)
+                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                    .setDuration(300)
+                    .translationY(tY)
+                    .start();
+        }, delay);
+
+        //color pink to green
+        int pink = ContextCompat.getColor(mAct, R.color.pink);
+        int green = ContextCompat.getColor(mAct, R.color.green);
+        ValueAnimator colorAnim = ValueAnimator.ofArgb(pink, green);
+        colorAnim.addUpdateListener(animation -> {
+            int color = (int) animation.getAnimatedValue();
+            mAct.ivCrossTick.setColorFilter(color);
+        });
+        colorAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+        colorAnim.setStartDelay(delay);
+        colorAnim.setDuration(300);
+        colorAnim.start();
+
+        delay += 300;
+
+        //POINT DISPOSER
+        bonusPointsFactor = Integer.parseInt(mAct.timerView.getText());
+        fillPoints();
+
+        //show current points
+        mAct.tvGamePoints.setY(mActHeight/2+mAct.ivCrossTick.getHeight()/2 - mAct.tvGamePoints.getHeight());
+        mAct.handler.postDelayed(() -> {
+            mAct.tvGamePoints.setVisibility(View.VISIBLE);
+            float oldTY = mAct.tvGamePoints.getTranslationY();
+            mAct.tvGamePoints.setTranslationY(mAct.tvGamePoints.getHeight() + oldTY);
+            mAct.tvGamePoints.setAlpha(0);
+            mAct.tvGamePoints.animate()
+                    .setStartDelay(0)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .setDuration(200)
+                    .translationY(oldTY)
+                    .alpha(1)
+                    .start();
+        }, delay);
+
+        delay += 300;
+
+        //show new points
+        mAct.tvNewGamePoints.setY(mAct.tvGamePoints.getY() + mAct.tvGamePoints.getHeight());
+        mAct.handler.postDelayed(() -> {
+            mAct.tvNewGamePoints.setVisibility(View.VISIBLE);
+            mAct.tvNewGamePoints.setAlpha(0);
+            mAct.tvNewGamePoints.setTranslationX(mActWidth/2);
+            mAct.tvNewGamePoints.animate()
+                    .setStartDelay(0)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .setDuration(200)
+                    .translationX(0)
+                    .alpha(1)
+                    .start();
+        }, delay);
+
+        delay += 200;
+
+        //Add new points to points
+        final int startPoints = points;
+        final int startNewPoints = newPoints;
+        ValueAnimator counter = ValueAnimator.ofInt(newPoints, 0);
+        counter.addUpdateListener(animation -> {
+            int v = (int) animation.getAnimatedValue();
+            float f = animation.getAnimatedFraction();
+            newPoints = v;
+            points = startPoints + (int)(startNewPoints*f);
+            fillPoints();
+        });
+        counter.setDuration(300);
+        counter.setStartDelay(delay);
+        counter.setInterpolator(new AccelerateDecelerateInterpolator());
+        counter.start();
+
+        delay += 500;
+
+        //hide new points
+        mAct.handler.postDelayed(() -> {
+            mAct.tvNewGamePoints.animate()
+                    .setStartDelay(0)
+                    .setInterpolator(new AccelerateInterpolator())
+                    .setDuration(200)
+                    .translationX(-mActWidth/2)
+                    .alpha(0)
+                    .withEndAction(() -> mAct.tvNewGamePoints.setVisibility(View.INVISIBLE))
+                    .start();
+        }, delay);
+
+        //time bonus
+        if(bonusPointsFactor > 0) {
+
+            delay += 200;
+
+            //show bonus text
+            mAct.tvBonus.setY(mAct.tvGamePoints.getY() + mAct.tvGamePoints.getHeight());
+            mAct.handler.postDelayed(() -> {
+                mAct.tvBonus.setVisibility(View.VISIBLE);
+                mAct.tvBonus.setAlpha(0);
+                mAct.tvBonus.setTranslationX(mActWidth/2);
+                mAct.tvBonus.animate()
+                        .setStartDelay(0)
+                        .setInterpolator(new DecelerateInterpolator())
+                        .setDuration(200)
+                        .translationX(0)
+                        .alpha(1)
+                        .start();
+            }, delay);
+
+            delay += 400;
+
+            //hide bonus text
+            mAct.handler.postDelayed(() -> {
+                mAct.tvBonus.animate()
+                        .setStartDelay(0)
+                        .setInterpolator(new AccelerateInterpolator())
+                        .setDuration(200)
+                        .translationX(-mActWidth/2)
+                        .alpha(0)
+                        .withEndAction(() -> mAct.tvBonus.setVisibility(View.INVISIBLE))
+                        .start();
+            }, delay);
+
+            delay += 200;
+
+            //show time bonus points
+            mAct.tvTimeGamePoints.setY(mAct.tvGamePoints.getY() + mAct.tvGamePoints.getHeight());
+            mAct.handler.postDelayed(() -> {
+                mAct.tvTimeGamePoints.setVisibility(View.VISIBLE);
+                mAct.tvTimeGamePoints.setAlpha(0);
+                mAct.tvTimeGamePoints.setTranslationX(mActWidth/2);
+                mAct.tvTimeGamePoints.animate()
+                        .setStartDelay(0)
+                        .setInterpolator(new DecelerateInterpolator())
+                        .setDuration(200)
+                        .translationX(0)
+                        .alpha(1)
+                        .start();
+            }, delay);
+
+            delay += 200;
+
+            //multiply bonus points
+            final int startFactor = bonusPointsFactor;
+            ValueAnimator multiplier = ValueAnimator.ofInt(bonusPointsFactor, 0);
+            multiplier.addUpdateListener(animation -> {
+                int v = (int) animation.getAnimatedValue();
+                float f = animation.getAnimatedFraction();
+                bonusPointsFactor = v;
+                bonusPoints = (int)(BONUS_FOR_TIME + f * (float)(startFactor-1) * (float)BONUS_FOR_TIME);
+                fillPoints();
+            });
+            multiplier.setDuration(300);
+            multiplier.setStartDelay(delay);
+            multiplier.setInterpolator(new AccelerateDecelerateInterpolator());
+            multiplier.start();
+
+            delay += 500;
+
+            //add bonus points
+            mAct.handler.postDelayed(() -> {
+                final int starterPoints = points;
+                final int starterBonusPoints = bonusPoints;
+                ValueAnimator increaser = ValueAnimator.ofInt(bonusPoints, 0);
+                increaser.addUpdateListener(animation -> {
+                    int v = (int) animation.getAnimatedValue();
+                    float f = animation.getAnimatedFraction();
+                    bonusPoints = v;
+                    points = starterPoints + (int)(starterBonusPoints*f);
+                    fillPoints();
+                });
+                increaser.setDuration(300);
+                increaser.setInterpolator(new AccelerateDecelerateInterpolator());
+                increaser.start();
+            }, delay);
+
+            delay += 500;
+
+            //show time bonus points
+            mAct.handler.postDelayed(() -> {
+                mAct.tvTimeGamePoints.animate()
+                        .setStartDelay(0)
+                        .setInterpolator(new AccelerateInterpolator())
+                        .setDuration(200)
+                        .translationX(-mActWidth/2)
+                        .withEndAction(() -> mAct.tvTimeGamePoints.setVisibility(View.INVISIBLE))
+                        .alpha(0)
+                        .start();
+            }, delay);
+        }
+
+        delay += 200;
+
+        //hide current points
+        mAct.handler.postDelayed(() -> {
+            float oldTY = mAct.tvGamePoints.getTranslationY();
+            mAct.tvGamePoints.animate()
+                    .setStartDelay(0)
+                    .setInterpolator(new AccelerateInterpolator())
+                    .setDuration(200)
+                    .translationY(mAct.tvGamePoints.getHeight() + oldTY)
+                    .withEndAction(() -> mAct.tvGamePoints.setVisibility(View.INVISIBLE))
+                    .alpha(0)
+                    .start();
+        }, delay);
+
+        delay += 100;
+
+        mAct.handler.postDelayed(() -> {
+            //switch and show tick
+//            mAct.timerView.setVisibility(View.INVISIBLE);
+//            mAct.ivCrossTick.setVisibility(View.VISIBLE);
+
+            AnimatedVectorDrawable avdCircle = (AnimatedVectorDrawable)
+                    mAct.getResources().getDrawable(R.drawable.avd_tick_to_circle, mAct.getTheme());
+            mAct.ivCrossTick.setImageDrawable(avdCircle);
+            avdCircle.start();
+
+            //scale tick
+            float s = (float)mAct.timerView.getWidth()/(float)mAct.ivCrossTick.getWidth();
+            mAct.ivCrossTick.animate()
+                    .setStartDelay(0)
+                    .setDuration(200)
+                    .setInterpolator(new OvershootInterpolator(2))
+                    .scaleX(s)
+                    .scaleY(s)
+                    .start();
+        }, delay);
+
+        delay += 0;
+
+        //hide lines
+        mAct.handler.postDelayed(() -> {
+            mAct.gameBackground.hideLines();
+        }, delay);
+
+        delay += 0;
+
+        mAct.handler.postDelayed(() -> {
+            mAct.gameBackground.animate()
+                    .setStartDelay(0)
+                    .scaleY(0)
+                    .setInterpolator(new AccelerateInterpolator())
+                    .setDuration(100)
+                    .start();
+            ValueAnimator updater = ValueAnimator.ofFloat(1, 0);
+            updater.addUpdateListener(animation -> mAct.gameBackground.invalidate());
+            updater.setDuration(100);
+            updater.setStartDelay(0);
+            updater.start();
+        }, delay);
+
+        delay += 200;
+        //translate y of circle
+        mAct.handler.postDelayed(() -> {
+//            float tY = -mAct.tvGamePoints.getHeight();
+//            mAct.ivCrossTick.setTranslationY(tY);
+//            scaleGameBg(0, 200, mAct.ivCrossTick, mAct.tvGamePoints, mAct.tvNewGamePoints);
+//            mAct.ivCrossTick.setTranslationY(0);
+            mAct.ivCrossTick.animate()
+                    .setStartDelay(0)
+                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                    .setDuration(200)
+                    .translationY(0)
+                    .start();
+        }, delay);
+
+        //color pink to green
+        ValueAnimator colorAnimTwo = ValueAnimator.ofArgb(green, pink);
+        colorAnimTwo.addUpdateListener(animation -> {
+            int color = (int) animation.getAnimatedValue();
+            mAct.ivCrossTick.setColorFilter(color);
+        });
+        colorAnimTwo.setInterpolator(new AccelerateDecelerateInterpolator());
+        colorAnimTwo.setStartDelay(delay);
+        colorAnimTwo.setDuration(200);
+        colorAnimTwo.start();
+    }
+
+    private void scaleGameBg(long delay, long duration, View... view) {
+        float centerY = mActHeight/2;
+        float maxY = centerY;
+        float minY = centerY;
+        for(View v : view) {
+            maxY = Math.max(+v.getY()+v.getHeight(), maxY);
+            minY = Math.min(+v.getY(), minY);
+        }
+        float distCenter = Math.max(maxY-centerY, centerY-minY);
+        float scaleY = distCenter*2/ (float)mAct.gameBackground.getHeight() + 0.02f/*padding :)*/;
+        mAct.gameBackground.animate()
+                .setStartDelay(delay)
+                .scaleY(scaleY)
+                .setInterpolator(new DecelerateInterpolator())
+                .setDuration(duration)
+                .start();
+        ValueAnimator updater = ValueAnimator.ofFloat(1, 0);
+        updater.addUpdateListener(animation -> mAct.gameBackground.invalidate());
+        updater.setDuration(duration);
+        updater.setStartDelay(delay);
+        updater.start();
+    }
+
+    private void fillPoints() {
+        mAct.tvNewGamePoints.setText(mAct.getString(R.string.add_points, newPoints));
+        mAct.tvGamePoints.setText(mAct.getString(R.string.game_points_template, points));
+        mAct.tvTimeGamePoints.setText(mAct.getString(R.string.time_bonus_points,
+                bonusPoints, bonusPointsFactor));
     }
 
 }

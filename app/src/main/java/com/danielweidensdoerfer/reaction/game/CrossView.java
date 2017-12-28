@@ -1,5 +1,6 @@
 package com.danielweidensdoerfer.reaction.game;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
@@ -45,7 +47,7 @@ public class CrossView extends View {
         mStrokePaint.setStrokeWidth(3);
         mStrokePaint.setStyle(Paint.Style.STROKE);
 
-        mCross = (AnimatedVectorDrawable) context.getDrawable(R.drawable.anim_draw_cross);
+        mCross = (AnimatedVectorDrawable) context.getDrawable(R.drawable.avd_draw_cross);
         setOnClickListener(v -> nextCross());
     }
 
@@ -121,9 +123,9 @@ public class CrossView extends View {
     }
 
     public void nextCross() {
-        if(mIndex >= mCount) {
+        if(mIndex >= mCount) return;
+        if(mIndex+1 >= mCount) {
             mAct.gameManager.lose();
-            return;
         }
         mCrosses[mIndex++].start();
         ValueAnimator updater = ValueAnimator.ofFloat(0, 1);
@@ -140,6 +142,24 @@ public class CrossView extends View {
                 .setInterpolator(new DecelerateInterpolator())
                 .setDuration(200)
                 .translationY(0)
+                .start();
+    }
+
+    public void hide() {
+        animate()
+                .setStartDelay(100)
+                .setInterpolator(new AccelerateInterpolator())
+                .setDuration(200)
+                .translationY(mHeight)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override public void onAnimationEnd(Animator animation) {
+                        setVisibility(INVISIBLE);
+                        setTranslationY(0);
+                    }
+                    @Override public void onAnimationCancel(Animator animation) {}
+                    @Override public void onAnimationRepeat(Animator animation) {}
+                    @Override public void onAnimationStart(Animator animation) {}
+                })
                 .start();
     }
 

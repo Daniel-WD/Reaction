@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/ic_play">
+    android:drawable="@drawable/ic_tick">
 
     <target
-        android:name="@string/play_path"
-        android:animation="@animator/pc_path_animation" />
+        android:name="@string/tick_path"
+        android:animation="@animator/anim_tick_circle_path" />
 
 </animated-vector>

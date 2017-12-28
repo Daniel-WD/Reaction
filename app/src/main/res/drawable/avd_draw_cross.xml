@@ -4,14 +4,14 @@
 
     <target
         android:name="@string/cross_path_a"
-        android:animation="@animator/cross_path_a_animation" />
+        android:animation="@animator/anim_cross_path_a" />
 
     <target
         android:name="@string/cross_path_b"
-        android:animation="@animator/cross_path_b_animation" />
+        android:animation="@animator/anim_cross_path_b" />
 
     <target
         android:name="@string/cross_group"
-        android:animation="@animator/cross_group_animation" />
+        android:animation="@animator/anim_cross_group" />
 
 </animated-vector>

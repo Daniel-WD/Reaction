@@ -273,7 +273,58 @@ public class GameView extends View {
         scaleDLs.setDuration(200);
         scaleDLs.setInterpolator(new DecelerateInterpolator());
         scaleDLs.start();
+    }
 
+    public void hide() {
+        long delay = 0;
+
+        //hide items
+        for (int i = mRows-1; i >= 0; i--) {
+            final int row = i;
+            ValueAnimator anim = ValueAnimator.ofFloat(1, 0);
+            anim.addUpdateListener(animation -> {
+                float v = (float) animation.getAnimatedValue();
+                for(int j = 0; j < mCols; j++) {
+                    if(mClicked[j][row]) continue;
+                    mValues[j][row][2] = v;
+                    mValues[j][row][6] = -(1-v)*mBlockSize/5;
+                }
+                invalidate();
+            });
+            anim.setStartDelay(delay);
+            anim.setInterpolator(new AccelerateInterpolator());
+            anim.setDuration(100);
+            anim.start();
+            delay += 30;
+        }
+
+        delay += 50;
+
+        //hide divider lines
+        ObjectAnimator scaleDLs = ObjectAnimator.ofFloat(this, "dLScale", 1, 0);
+        scaleDLs.setStartDelay(delay);
+        scaleDLs.setDuration(200);
+        scaleDLs.setInterpolator(new AccelerateInterpolator());
+        scaleDLs.start();
+
+        delay += 150;
+
+//        mAct.gameBackground.setPivotY(mAct.gameBackground.getHeight()*2/3);
+//        mAct.gameBackground.setScaleY(1);
+//        mAct.gameBackground.animate()
+//                .setStartDelay(delay)
+//                .scaleY(0)
+//                .setInterpolator(new DecelerateInterpolator())
+//                .setDuration(250)
+//                .start();
+
+        delay += 250;
+
+        mHandler.postDelayed(() -> {
+            setVisibility(INVISIBLE);
+            //mAct.gameBackground.setVisibility(INVISIBLE);
+            setEnabled(true);
+        }, delay);
     }
 
     private int[] findColRowByLocation(float sx, float sy){

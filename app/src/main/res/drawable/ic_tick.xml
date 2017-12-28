@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/ct_width"
+    android:height="@dimen/ct_height"
+    android:viewportHeight="@integer/ct_viewportHeight"
+    android:viewportWidth="@integer/ct_viewportWidth">
+    <path
+        android:name="@string/tick_path"
+        android:fillColor="#000"
+        android:pathData="@string/tick_path_data" />
+</vector>

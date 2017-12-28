@@ -12,9 +12,11 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.danielweidensdoerfer.reaction.game.CrossView;
+import com.danielweidensdoerfer.reaction.game.GameBackground;
 import com.danielweidensdoerfer.reaction.game.GameManager;
 import com.danielweidensdoerfer.reaction.game.GameView;
 import com.danielweidensdoerfer.reaction.loading.LoadingView;
@@ -34,8 +36,14 @@ public class ReactionActivity extends AppCompatActivity {
     public LoadingView loadingView;
     public TimerView timerView;
     public GameView gameView;
-    public View gameBackground;
+    public GameBackground gameBackground;
     public CrossView crossView;
+    public TextView tvGamePoints;
+    public ImageView ivCrossTick;
+    public TextView tvNewGamePoints;
+    public TextView tvTimeGamePoints;
+    public TextView tvBonus;
+    //public View resultBackground;
     //public TextView tvTask;
 
     public Handler handler = new Handler();
@@ -63,6 +71,12 @@ public class ReactionActivity extends AppCompatActivity {
         gameView = findViewById(R.id.gameView);
         gameBackground = findViewById(R.id.gameBackground);
         crossView = findViewById(R.id.crossView);
+        tvGamePoints = findViewById(R.id.tvGamePoints);
+        ivCrossTick = findViewById(R.id.ivCrossTick);
+        tvNewGamePoints = findViewById(R.id.tvNewGamePoints);
+        tvTimeGamePoints = findViewById(R.id.tvTimeGamePoints);
+        tvBonus = findViewById(R.id.tvBonus);
+//        resultBackground = findViewById(R.id.resultBackground);
         //tvTask = findViewById(R.id.tvTask);
 
         btnStart.setOnClickListener(v -> {

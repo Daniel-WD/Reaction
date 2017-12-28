@@ -5,6 +5,11 @@
 
     <string name="remove">REMOVE</string>
 
+    <string name="add_points">+%1$d</string>
+    <string name="time_bonus_points">+%1$d × %2$d</string>
+    <string name="bonus">BONUS</string>
+    <string name="remove_points">-%1$d</string>
+    <string name="game_points_template">%1$d POINTS</string>
     <string name="points_template">%1$s Points</string>
     <string name="played_rounds_template">Played Rounds: %1$s</string>
     <string name="round_record_template">Round Record: %1$s</string>

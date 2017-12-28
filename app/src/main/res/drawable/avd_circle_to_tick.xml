@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_circle_two">
+
+    <target
+        android:name="@string/circle_path_two"
+        android:animation="@animator/anim_circle_tick_path" />
+
+</animated-vector>
