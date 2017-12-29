@@ -231,6 +231,7 @@ public class GameView extends View {
         long delay = 0;
 
         mAct.gameBackground.setVisibility(VISIBLE);
+        mAct.gameBackground.setAlpha(1);
         mAct.gameBackground.setPivotY(mAct.gameBackground.getHeight()*2/3);
         mAct.gameBackground.setScaleY(0);
         mAct.gameBackground.animate()

@@ -62,8 +62,6 @@ public class LoadingView extends View {
 
     private float mDashesOffset = 0;
 
-    private boolean mMirrorRO = false/*unused*/;
-
     //handler
     private Handler mHandler;
 
@@ -95,14 +93,10 @@ public class LoadingView extends View {
         //primary text
         mPTPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mPTPaint.setColor(ContextCompat.getColor(getContext(), R.color.snow));
-        mPTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.currentRoundSize));
-        mPTPaint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 
         //secondary text
         mSTPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mSTPaint.setColor(ContextCompat.getColor(getContext(), R.color.snow));
-        mSTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.currentTaskSize));
-        mSTPaint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
 
         //background overlay circle
         mOPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -114,6 +108,33 @@ public class LoadingView extends View {
         mODPaint.setColor(ContextCompat.getColor(getContext(), R.color.nero));
         mODPaint.setStyle(Paint.Style.STROKE);
         mODPaint.setStrokeWidth(OUTDOOR_OVERLAY_STRENGTH);
+
+        init();
+    }
+
+    public void init() {
+        mPTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.currentRoundSize));
+        mPTPaint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+
+        mSTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.currentTaskSize));
+        mSTPaint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+
+        mTranslationPTX = 0;
+        mTranslationPTY = 0;
+        mTranslationSTX = 0;
+        mTranslationSTY = 0;
+        mPText = "";
+        mSText = "";
+        mPTScale = 1f;
+        mSTScale = 1f;
+
+        mICenterRadius = 0;
+        mIDegrees = 0;
+        mCDegrees = 0;
+        mCScale = 1;
+        mBScale = 1;
+        mOFill = 0;
+        mDashesOffset = 0;
     }
 
     @Override
@@ -171,7 +192,7 @@ public class LoadingView extends View {
         }
 
         //Overlay
-        canvas.drawArc(mBgRect, mOFill -90 - (mMirrorRO ? 180 : 0),
+        canvas.drawArc(mBgRect, mOFill -90,
                 360-2*(mOFill), false, mOPaint);
 
         //Outdoor
@@ -186,12 +207,15 @@ public class LoadingView extends View {
     }
 
     public void blowUp() {
+        init();
         setVisibility(VISIBLE);
         long delay = 0;
 
         mTargetLayout.setTargets(mAct.gameManager.generatorResult.targets);
 
         //collapse indicator to 1/3
+        mAct.ivCrossTick.setVisibility(View.INVISIBLE);
+
         ObjectAnimator collapseIOne = ObjectAnimator.ofFloat(this, "iRadius",
                 mIRadius, mIRadius/3);
         collapseIOne.setDuration(220);

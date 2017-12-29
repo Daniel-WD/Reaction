@@ -12,7 +12,7 @@
 
     <dimen name="timerTextSize">24sp</dimen>
 
-    <integer name="showRoundDuration">600</integer>
+    <integer name="showRoundDuration">1000</integer>
     <integer name="showTargetsDuration">2000</integer>
     <integer name="showTimeDuration">1000</integer>
     <integer name="showCountdownNumberDuration">350</integer>

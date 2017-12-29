@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -58,7 +59,7 @@ public class GameBackground extends View {
 
     public void hideLines() {
         ObjectAnimator anim = ObjectAnimator.ofFloat(this, "lScale", 1, 0);
-        anim.setInterpolator(new AccelerateInterpolator());
+        anim.setInterpolator(new DecelerateInterpolator());
         anim.setDuration(200);
         anim.start();
     }

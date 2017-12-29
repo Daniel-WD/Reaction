@@ -27,12 +27,13 @@ public class GameManager {
     private int mActWidth, mActHeight;
 
     public static final int BONUS_FOR_TIME = 20;
+    public static final int STD_ROUND_ROUND_POINTS = 300;
 
     public int bonusPointsFactor = 0;
     public int bonusPoints = BONUS_FOR_TIME;
-    public int newPoints = 300;
+    public int newPoints = STD_ROUND_ROUND_POINTS;
     public int points = 0;
-    public int time = 5; //seconds
+    public int time = 0; //seconds
     public int currentRound = 14;
     public GeneratorResult generatorResult = null;
 
@@ -119,9 +120,6 @@ public class GameManager {
 
         //blow up
         mAct.handler.postDelayed(() -> {
-            int padding = mAct.getResources().getDimensionPixelSize(R.dimen.btnStartPadding);
-            float circleRadius = ((mAct.btnStart.getWidth())/2 -padding) *mAct.fStart.getScaleX();
-            mAct.loadingView.setIRadius(circleRadius);
             nextRound();
             mAct.fStart.setVisibility(View.INVISIBLE);
         }, delay);
@@ -131,6 +129,14 @@ public class GameManager {
         generatorResult = GridGenerator.generate(currentRound);
         time = (int)generatorResult.time/1000;
         mAct.gameView.setItemField(generatorResult.field, generatorResult.targets);
+        if(mAct.ivCrossTick.getVisibility() == View.VISIBLE) {
+            mAct.loadingView.setIRadius(mAct.ivCrossTick.getWidth()* mAct.ivCrossTick.getScaleX()/2);
+        } else {
+            int padding = mAct.getResources().getDimensionPixelSize(R.dimen.btnStartPadding);
+            float circleRadius = ((mAct.btnStart.getWidth())/2 -padding) *mAct.fStart.getScaleX();
+            mAct.loadingView.setIRadius(circleRadius);
+        }
+
         mAct.loadingView.blowUp();
     }
 
@@ -139,6 +145,9 @@ public class GameManager {
         mAct.timerView.setVisibility(View.VISIBLE);
 
         long delay = 0;
+
+        mAct.timerView.setTranslationX(0);
+        mAct.timerView.setTranslationY(0);
 
         //move timeView
         float startX = mActWidth/2-mAct.timerView.getWidth()/2;
@@ -269,6 +278,7 @@ public class GameManager {
         delay += 300;
 
         //POINT DISPOSER
+        newPoints = STD_ROUND_ROUND_POINTS;
         bonusPointsFactor = Integer.parseInt(mAct.timerView.getText());
         fillPoints();
 
@@ -357,7 +367,7 @@ public class GameManager {
                         .start();
             }, delay);
 
-            delay += 400;
+            delay += 500;
 
             //hide bonus text
             mAct.handler.postDelayed(() -> {
@@ -454,24 +464,22 @@ public class GameManager {
                     .start();
         }, delay);
 
-        delay += 100;
+        delay += 200;
 
         mAct.handler.postDelayed(() -> {
-            //switch and show tick
-//            mAct.timerView.setVisibility(View.INVISIBLE);
-//            mAct.ivCrossTick.setVisibility(View.VISIBLE);
+            //switch and show circle
 
             AnimatedVectorDrawable avdCircle = (AnimatedVectorDrawable)
                     mAct.getResources().getDrawable(R.drawable.avd_tick_to_circle, mAct.getTheme());
             mAct.ivCrossTick.setImageDrawable(avdCircle);
             avdCircle.start();
 
-            //scale tick
+            //scale circle
             float s = (float)mAct.timerView.getWidth()/(float)mAct.ivCrossTick.getWidth();
             mAct.ivCrossTick.animate()
                     .setStartDelay(0)
                     .setDuration(200)
-                    .setInterpolator(new OvershootInterpolator(2))
+                    .setInterpolator(new AnticipateInterpolator(2))
                     .scaleX(s)
                     .scaleY(s)
                     .start();
@@ -486,21 +494,23 @@ public class GameManager {
 
         delay += 0;
 
+        //hide gamebackground
         mAct.handler.postDelayed(() -> {
             mAct.gameBackground.animate()
                     .setStartDelay(0)
-                    .scaleY(0)
+                    .scaleY(1)
+                    .alpha(0)
                     .setInterpolator(new AccelerateInterpolator())
-                    .setDuration(100)
+                    .setDuration(300)
                     .start();
             ValueAnimator updater = ValueAnimator.ofFloat(1, 0);
             updater.addUpdateListener(animation -> mAct.gameBackground.invalidate());
-            updater.setDuration(100);
+            updater.setDuration(300);
             updater.setStartDelay(0);
             updater.start();
         }, delay);
 
-        delay += 200;
+        delay += 00;
         //translate y of circle
         mAct.handler.postDelayed(() -> {
 //            float tY = -mAct.tvGamePoints.getHeight();
@@ -509,8 +519,8 @@ public class GameManager {
 //            mAct.ivCrossTick.setTranslationY(0);
             mAct.ivCrossTick.animate()
                     .setStartDelay(0)
-                    .setInterpolator(new AccelerateDecelerateInterpolator())
-                    .setDuration(200)
+                    .setInterpolator(new OvershootInterpolator(5))
+                    .setDuration(400)
                     .translationY(0)
                     .start();
         }, delay);
@@ -525,6 +535,10 @@ public class GameManager {
         colorAnimTwo.setStartDelay(delay);
         colorAnimTwo.setDuration(200);
         colorAnimTwo.start();
+
+        delay += 400;
+
+        mAct.handler.postDelayed(this::nextRound, delay);
     }
 
     private void scaleGameBg(long delay, long duration, View... view) {

@@ -62,6 +62,7 @@ public class CrossView extends View {
     }
 
     private void init() {
+        mIndex = 0;
         mBlockSize = Math.min(mWidth/ mCount, mHeight);
 
         float xOffset, yOffset;
@@ -117,7 +118,6 @@ public class CrossView extends View {
 
     public void setCount(int count) {
         mCount = count;
-        mIndex = 0;
         init();
         invalidate();
     }
@@ -135,6 +135,8 @@ public class CrossView extends View {
     }
 
     public void show() {
+        init();
+
         setVisibility(VISIBLE);
         setTranslationY(mHeight);
         animate()
@@ -151,14 +153,9 @@ public class CrossView extends View {
                 .setInterpolator(new AccelerateInterpolator())
                 .setDuration(200)
                 .translationY(mHeight)
-                .setListener(new Animator.AnimatorListener() {
-                    @Override public void onAnimationEnd(Animator animation) {
-                        setVisibility(INVISIBLE);
-                        setTranslationY(0);
-                    }
-                    @Override public void onAnimationCancel(Animator animation) {}
-                    @Override public void onAnimationRepeat(Animator animation) {}
-                    @Override public void onAnimationStart(Animator animation) {}
+                .withEndAction(() -> {
+                    setVisibility(INVISIBLE);
+                    setTranslationY(0);
                 })
                 .start();
     }

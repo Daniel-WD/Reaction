@@ -156,6 +156,7 @@ public class TimerView extends View {
 
     public void start() {
         //mCountdown
+        mStopped = false;
         mCountdown = ObjectAnimator.ofInt(this, "time", Integer.parseInt(mText), 0);
         mCountdown.addUpdateListener(animation -> {
             float f = animation.getAnimatedFraction();
