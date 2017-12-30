@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -26,12 +27,16 @@ public class TargetLayout {
 
     private ReactionActivity mAct;
 
+    private int mElectricBlue;
+
     TargetLayout(Context context, float x, float y, float width, float height) {
         this.mWidth = width;
         this.mHeight = height;
         this.mX = x;
         this.mY = y;
         mAct = (ReactionActivity) context;
+
+        mElectricBlue = ContextCompat.getColor(context, R.color.electric_blue);
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.MAGENTA);
@@ -87,7 +92,7 @@ public class TargetLayout {
             canvas.rotate(mValues[i][4], mBlockSize/2, mBlockSize/2);
 
             //canvas.drawRect(0, 0, mBlockSize, mBlockSize, mStrokePaint);
-            mTargets[i].item().drawable.setColorFilter(mTargets[i].item().color, PorterDuff.Mode.SRC_ATOP);
+            mTargets[i].item().drawable.setColorFilter(mElectricBlue, PorterDuff.Mode.SRC_ATOP);
             mTargets[i].item().drawable.draw(canvas);
             canvas.restore();
         }

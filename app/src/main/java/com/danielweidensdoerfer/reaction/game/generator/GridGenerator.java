@@ -13,6 +13,8 @@ import static com.danielweidensdoerfer.reaction.game.generator.Tag.*;
 
 public class GridGenerator {
 
+    private static final String TAG = GridGenerator.class.getSimpleName();
+
     public static final int CREATE_1_ITEM = 0;
     public static final int CREATE_ITEM_CAT = 1;
     public static final int CREATE_ALL_ITEMS = 2;
@@ -79,29 +81,14 @@ public class GridGenerator {
     private static Item sNine;
     private static Item sZero;
 
-    //fruits
-    private static Item sBanana;
-    private static Item sApple;
-    private static Item sMelon;
-    private static Item sPear;
-
-    //objects
-    private static Item sCircleFilled;
-    private static Item sCircleOutline;
-    private static Item sSquareFilled;
-    private static Item sSquareOutline;
-    private static Item sSquareRoundFilled;
-    private static Item sSquareRoundOutline;
-
     private static ArrayList<Item> sItems = new ArrayList<>();
 
     private static LevelConfig[] configs = new LevelConfig[] {
             new LevelConfig(3, 4, 4, 5000, 3000, 1, 1),
             new LevelConfig(4, 5, 5, 8000, 4000, 1, 3),
             new LevelConfig(4, 6, 5, 8000, 5000, 3, 5),
-            new LevelConfig(5, 7, 5, 10000, 6000, 2, 4)
+            new LevelConfig(5, 11, 8, 10000, 6000, 2, 4)
     };
-    private static int configIndex = 0;
 
     private static  Random random = new Random();
 
@@ -240,17 +227,6 @@ public class GridGenerator {
         sItems.add(sEight);
         sItems.add(sNine);
         sItems.add(sZero);
-
-        //fruits
-        sBanana = new Item(id++, context, R.drawable.img_fr_banana, FRUIT);
-        sApple = new Item(id++, context, R.drawable.img_fr_apple, FRUIT);
-        sMelon = new Item(id++, context, R.drawable.img_fr_melon, FRUIT);
-        sPear = new Item(id++, context, R.drawable.img_fr_pear, FRUIT);
-
-//        sItems.add(sBanana);
-//        sItems.add(sApple);
-//        sItems.add(sMelon);
-//        sItems.add(sPear);
     }
 
     private static LevelConfig findConfig(int round) {
@@ -282,22 +258,35 @@ public class GridGenerator {
     }
 
     private static void fillTargets(Target[] targets, Item[][] field) {
-        ArrayList<Item> items = new ArrayList<>();
-        ArrayList<Integer> colors = new ArrayList<>();
+        ArrayList<Item> items = new ArrayList<>();//all items in field
+        ArrayList<Integer> colors = new ArrayList<>();//all colors in field
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[i].length; j++) {
                 if(!items.contains(field[i][j])) items.add(field[i][j]);
                 if(!colors.contains(field[i][j].color)) colors.add(field[i][j].color);
             }
         }
+        //choose target items and colors
+        ArrayList<Item> chosenItems = new ArrayList<>();
+        ArrayList<Integer> chosenColors = new ArrayList<>();
         for (int i = 0; i < targets.length; i++) {
-            int r = random.nextInt(1);
+            int r = random.nextInt(1);  //only item targets
             if(r == 0) {
-                targets[i] = new Target.ItemTarget(items.get(random.nextInt(items.size())).copy());
-                Log.d("tag", "item");
+                Item item;
+                do {
+                    item = items.get(random.nextInt(items.size()));
+                } while(chosenItems.contains(item));
+                chosenItems.add(item);
+                targets[i] = new Target.ItemTarget(item.copy());
+                Log.d(TAG, "new item");
             } else {
-                targets[i] = new Target.ColorTarget(colors.get(random.nextInt(colors.size())));
-                Log.d("tag", "color");
+                int color;
+                do {
+                    color = colors.get(random.nextInt(colors.size()));
+                } while(chosenColors.contains(color));
+                chosenColors.add(color);
+                targets[i] = new Target.ColorTarget(color);
+                Log.d(TAG, "new color");
             }
         }
     }
@@ -437,5 +426,4 @@ public class GridGenerator {
                 break;
         }
     }
-
 }

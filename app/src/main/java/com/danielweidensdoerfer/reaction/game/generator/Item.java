@@ -38,4 +38,10 @@ public class Item {
         return new Item(id, drawable, color, tags);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Item)) return false;
+        Item item = (Item) obj;
+        return item.id == this.id;
+    }
 }

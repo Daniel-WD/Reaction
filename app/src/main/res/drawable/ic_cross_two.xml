@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/cc_width"
+    android:height="@dimen/cc_height"
+    android:viewportHeight="@integer/cc_viewportHeight"
+    android:viewportWidth="@integer/cc_viewportWidth">
+    <path
+        android:name="@string/cross_path_two"
+        android:fillColor="#000"
+        android:pathData="@string/cross_two_path_data" />
+</vector>

@@ -225,11 +225,11 @@ public class LoadingView extends View {
         //move indicator up
         ObjectAnimator moveUpI = ObjectAnimator.ofFloat(this, "iCenterRadius", mICenterRadius,
                 calcMaxICenterRadius());
-        moveUpI.setDuration(200);
+        moveUpI.setDuration(250);
         moveUpI.setInterpolator(new AccelerateDecelerateInterpolator());
         moveUpI.start();
 
-        delay += 200;
+        delay += 250;
 
         //create circle
         ObjectAnimator createCircle = ObjectAnimator.ofFloat(this, "iDegrees", 0, 360);
