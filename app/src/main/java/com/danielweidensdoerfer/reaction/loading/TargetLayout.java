@@ -23,7 +23,7 @@ public class TargetLayout {
     private float[][] mValues;//x, y, alpha, scale, rotate, translationX, translationY
     private float mBlockSize, mBlockPadding;
 
-    private int mCols;
+    public int mCols;
 
     private ReactionActivity mAct;
 
@@ -103,19 +103,23 @@ public class TargetLayout {
     void show() {
         long delay = 0;
 
-        ValueAnimator alphaScaleAnim = ValueAnimator.ofFloat(0, 1);
-        alphaScaleAnim.addUpdateListener(animation -> {
-            for(int i = 0; i < mCols; i++) {
+        for(int i = 0; i < mCols; i++) {
+            final int j = i;
+            ValueAnimator moveUpAnim = ValueAnimator.ofFloat(0, 1);
+            moveUpAnim.addUpdateListener(animation -> {
                 float v = (float)animation.getAnimatedValue();
-                mValues[i][2] = v;
-                mValues[i][6] = (1-v)*mBlockSize/3;
+                mValues[j][2] = v;
+                mValues[j][6] = (1-v)*mBlockSize/3;
                 mAct.loadingView.invalidate();
-            }
-        });
-        alphaScaleAnim.setStartDelay(delay);
-        alphaScaleAnim.setInterpolator(new DecelerateInterpolator());
-        alphaScaleAnim.setDuration(150);
-        alphaScaleAnim.start();
+            });
+            moveUpAnim.setStartDelay(delay);
+            moveUpAnim.setInterpolator(new DecelerateInterpolator());
+            moveUpAnim.setDuration(150);
+            moveUpAnim.start();
+
+            delay += 50;
+        }
+
     }
 
     void hide() {

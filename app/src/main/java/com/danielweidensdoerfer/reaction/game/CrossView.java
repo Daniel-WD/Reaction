@@ -125,7 +125,7 @@ public class CrossView extends View {
     public void nextCross() {
         if(mIndex >= mCount) return;
         if(mIndex+1 >= mCount) {
-            mAct.gameManager.lose();
+            mAct.gameManager.closeGameField(false);
         }
         mCrosses[mIndex++].start();
         ValueAnimator updater = ValueAnimator.ofFloat(0, 1);

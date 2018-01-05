@@ -43,6 +43,9 @@ public class ReactionActivity extends AppCompatActivity {
     public TextView tvNewGamePoints;
     public TextView tvTimeGamePoints;
     public TextView tvBonus;
+    public ImageButton btnRepeat;
+    public TextView tvLoose;
+    public ImageButton btnHome;
     //public View resultBackground;
     //public TextView tvTask;
 
@@ -50,10 +53,14 @@ public class ReactionActivity extends AppCompatActivity {
 
     public GameManager gameManager;
 
+    private static boolean mStarted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reaction);
+
+        Database.init(this);
 
         gameManager = new GameManager(this);
 
@@ -76,11 +83,23 @@ public class ReactionActivity extends AppCompatActivity {
         tvNewGamePoints = findViewById(R.id.tvNewGamePoints);
         tvTimeGamePoints = findViewById(R.id.tvTimeGamePoints);
         tvBonus = findViewById(R.id.tvBonus);
+        btnRepeat = findViewById(R.id.btnRepeat);
+        tvLoose = findViewById(R.id.tvLoose);
+        btnHome = findViewById(R.id.btnHome);
 //        resultBackground = findViewById(R.id.resultBackground);
         //tvTask = findViewById(R.id.tvTask);
 
+        btnHome.setOnClickListener(v -> {
+            updateValues();
+            gameManager.closeLooseScreen(false);
+        });
+
         btnStart.setOnClickListener(v -> {
             gameManager.startGame();
+        });
+
+        btnRepeat.setOnClickListener(v -> {
+            gameManager.closeLooseScreen(true);
         });
     }
 
@@ -88,7 +107,7 @@ public class ReactionActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        //Rotation of start bg
+        //Rotation of start button background
         ObjectAnimator rotation = ObjectAnimator.ofFloat(vStartBg, "rotation", 0, 360);
         rotation.setInterpolator(new LinearInterpolator());
         rotation.setRepeatCount(ValueAnimator.INFINITE);
@@ -96,7 +115,7 @@ public class ReactionActivity extends AppCompatActivity {
         rotation.start();
 
         //enter animations
-        handler.postDelayed(() -> {
+        if(!mStarted) handler.postDelayed(() -> {
             long delay = 100;
 
             tvTitle.setTranslationY(tvTitle.getHeight()/5);
@@ -133,11 +152,11 @@ public class ReactionActivity extends AppCompatActivity {
 
             float translateY = -tvPlayedRounds.getHeight()/4;
             delay += 100;
-            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, tvPlayedRounds);
+            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, 300, tvPlayedRounds);
             delay += 100;
-            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, tvRoundRecord);
+            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, 300, tvRoundRecord);
             delay += 100;
-            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, tvRemovedObjects);
+            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, 300, tvRemovedObjects);
             delay += 300;
 
             fStart.setAlpha(0);
@@ -153,18 +172,41 @@ public class ReactionActivity extends AppCompatActivity {
                     .start();
         }, 100);
 
+        mStarted = true;
+    }
+
+    public void updateValues() {
+        tvPoints.setText(getString(R.string.points_template, Database.recordPoints));
+        tvPlayedRounds.setText(getString(R.string.played_rounds_template, Database.playedRounds));
+        tvRoundRecord.setText(getString(R.string.round_record_template, Database.roundRecord));
+        tvRemovedObjects.setText(getString(R.string.removed_objects_template, Database.removedObjects));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Database.load();
+        updateValues();
+
         //hide status bar
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-/*    @Override
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Database.save();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(gameManager.isInLooseScreen) btnHome.callOnClick();
+        if(tvTitle.getVisibility() == View.VISIBLE) super.onBackPressed();
+    }
+
+    /*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()) {

@@ -18,16 +18,63 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <View
-        android:id="@+id/resultBackground"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/dark_dark_nero"
+    <ImageButton
+        android:id="@+id/btnHome"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/btnRepeatPadding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_home"
+        android:tint="@color/trans_snow"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnRepeat"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_repeat"
+        android:padding="@dimen/btnRepeatPadding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_sync"
+        android:tint="@color/electric_blue"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
+        app:layout_constraintTop_toTopOf="@+id/startFrame" />
+
+    <!--    <View
+            android:id="@+id/resultBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/dark_dark_nero"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />-->
+
+    <TextView
+        android:id="@+id/tvLoose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/loose"
+        android:textColor="@color/pink"
+        android:textSize="30sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvGamePoints"
@@ -47,7 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-        android:textColor="@color/pink"
+        android:textColor="@color/green"
         android:textSize="30sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -60,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-        android:textColor="@color/pink"
+        android:textColor="@color/green"
         android:textSize="30sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -70,11 +117,11 @@
 
     <TextView
         android:id="@+id/tvBonus"
-        android:text="@string/bonus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-        android:textColor="@color/pink"
+        android:text="@string/bonus"
+        android:textColor="@color/green"
         android:textSize="30sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -157,10 +204,10 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-thin"
+        android:fontFamily="@font/flamenco_light"
         android:text="@string/app_name_caps"
-        android:textColor="@color/snow"
-        android:textSize="70sp"
+        android:textColor="@android:color/white"
+        android:textSize="72sp"
         app:layout_constraintBottom_toTopOf="@+id/tvPoints"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -257,8 +304,8 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginStart="55dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
         android:background="@color/snow"
         app:layout_constraintBottom_toTopOf="@+id/tvPlayedRounds"
         app:layout_constraintEnd_toEndOf="parent"

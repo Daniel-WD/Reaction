@@ -1,5 +1,6 @@
 package com.danielweidensdoerfer.reaction.game;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -17,10 +18,13 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
+import com.danielweidensdoerfer.reaction.Database;
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
 import com.danielweidensdoerfer.reaction.game.generator.Item;
 import com.danielweidensdoerfer.reaction.game.generator.Target;
+
+import java.util.ArrayList;
 
 public class GameView extends View {
 
@@ -48,8 +52,16 @@ public class GameView extends View {
 
     private Item[][] mItemField;
 
+    private PathMeasure mFallDownPathMeasure;
+    private float[] pathPos = new float[2];
+
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        Path mFallDownPath = new Path();
+        mFallDownPath.moveTo(0, 0);
+        mFallDownPath.cubicTo(0.7f, 0, 1, 0.3f, 1, 1);
+        mFallDownPathMeasure = new PathMeasure(mFallDownPath, false);
 
         mAct = (ReactionActivity) context;
 
@@ -178,6 +190,7 @@ public class GameView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(!isEnabled()) return false;
         switch(event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
@@ -185,25 +198,21 @@ public class GameView extends View {
                 if(pos == null || mClicked[pos[0]][pos[1]]) return true;
                 if(mTarget[pos[0]][pos[1]]) {
                     //clicked target
-                    if(--mTargetCount == 0) mAct.gameManager.win();
+                    if(--mTargetCount == 0) mAct.gameManager.closeGameField(true);
                 } else {
                     //clicked wrong pos
                     mAct.crossView.nextCross();
-                    // TODO: 23.12.2017 add cross to fails view and ...vibrate... ;)
+                    // TODO: 23.12.2017 ...vibrate... ;)
                 }
                 mClicked[pos[0]][pos[1]] = true;
+
+                //increase removed objects in database
+                Database.removedObjects++;
 
                 //rotation direction
                 final float f = (event.getX(event.getActionIndex()) - (mValues[pos[0]][pos[1]][0] + mBlockSize/2)) / (mBlockSize/2);
 
-                // TODO: 23.12.2017 auslagern :D
-                Path p = new Path();
-                p.moveTo(0, 0);
-                p.cubicTo(0.7f, 0, 1, 0.3f, 1, 1);
-                PathMeasure pm = new PathMeasure(p, false);
-                float[] pathPos = new float[2];
-
-                ValueAnimator fallDown = ValueAnimator.ofFloat(0, 1);
+                final ValueAnimator fallDown = ValueAnimator.ofFloat(0, 1);
                 fallDown.setDuration(400);
                 fallDown.setInterpolator(new AccelerateInterpolator(0.5f));
                 fallDown.addUpdateListener(animation -> {
@@ -212,7 +221,7 @@ public class GameView extends View {
                     //mValues[pos[0]][pos[1]][3] = 1+v;
                     mValues[pos[0]][pos[1]][4] = (f > 0 ? -1 : 1) * v * 360 * 1/2;
 
-                    pm.getPosTan(pm.getLength()*v, pathPos, null);
+                    mFallDownPathMeasure.getPosTan(mFallDownPathMeasure.getLength()*v, pathPos, null);
                     mValues[pos[0]][pos[1]][5] = -f * mWidth/3 * pathPos[0];
                     mValues[pos[0]][pos[1]][6] = mHeight*1.1f * pathPos[1];
 

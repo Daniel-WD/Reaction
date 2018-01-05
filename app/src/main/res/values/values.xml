@@ -3,6 +3,7 @@
     <dimen name="timeViewSize">50dp</dimen>
 
     <dimen name="btnStartPadding">22dp</dimen>
+    <dimen name="btnRepeatPadding">10dp</dimen>
 
     <dimen name="currentRoundSize">43sp</dimen>
     <dimen name="currentTaskSize">27sp</dimen>
@@ -12,16 +13,16 @@
 
     <dimen name="timerTextSize">24sp</dimen>
 
-    <integer name="showRoundDuration">1000</integer>
-    <integer name="showTargetsDuration">2000</integer>
-    <integer name="showTimeDuration">1000</integer>
+    <integer name="showRoundDuration">500</integer>
+    <integer name="showOneTargetDuration">1000</integer>
+    <integer name="showTimeDuration">500</integer>
     <integer name="showCountdownNumberDuration">350</integer>
 
     <!-- GameView -->
     <dimen name="blockPadding">10dp</dimen>
 
     <!-- LoadingView -->
-    <dimen name="previewBlockPadding">4dp</dimen>
+    <dimen name="previewBlockPadding">6dp</dimen>
 
     <!-- CrossView -->
     <dimen name="crossBlockPadding">4dp</dimen>

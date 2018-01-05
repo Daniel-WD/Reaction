@@ -168,7 +168,7 @@ public class TimerView extends View {
                     mStopped = false;
                     return;
                 }
-                mAct.gameManager.lose();
+                mAct.gameManager.closeGameField(false);
             }
             @Override public void onAnimationStart(Animator animation) {}
             @Override public void onAnimationCancel(Animator animation) {}

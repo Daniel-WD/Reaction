@@ -84,10 +84,10 @@ public class GridGenerator {
     private static ArrayList<Item> sItems = new ArrayList<>();
 
     private static LevelConfig[] configs = new LevelConfig[] {
-            new LevelConfig(3, 4, 4, 5000, 3000, 1, 1),
-            new LevelConfig(4, 5, 5, 8000, 4000, 1, 3),
-            new LevelConfig(4, 6, 5, 8000, 5000, 3, 5),
-            new LevelConfig(5, 11, 8, 10000, 6000, 2, 4)
+            new LevelConfig(100, 4, 4, 4, 5000, 4000, 1, 1),
+            new LevelConfig(200, 5, 5, 4, 6000, 4000, 1, 1),
+            new LevelConfig(300, 6, 5, 5, 9000, 7000, 1, 1),
+            new LevelConfig(400, 7, 6, 5, 12000, 10000, 1, 1)
     };
 
     private static  Random random = new Random();
@@ -254,7 +254,7 @@ public class GridGenerator {
 
         fillTargets(targets, field);
 
-        return new GeneratorResult(field, targets, config.time());
+        return new GeneratorResult(field, targets, config.time(), config.winPoints);
     }
 
     private static void fillTargets(Target[] targets, Item[][] field) {

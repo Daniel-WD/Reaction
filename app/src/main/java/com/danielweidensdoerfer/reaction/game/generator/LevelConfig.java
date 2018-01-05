@@ -2,6 +2,7 @@ package com.danielweidensdoerfer.reaction.game.generator;
 
 class LevelConfig {
 
+    final int winPoints;
     final int numRounds;
     final int rows, cols;
     private final long startTime, endTime;
@@ -9,7 +10,8 @@ class LevelConfig {
 
     private float fraction = 0;
 
-    LevelConfig(int rounds, int rs, int cs, long sTime, long eTime, int sTargets, int eTargets) {
+    LevelConfig(int points, int rounds, int rs, int cs, long sTime, long eTime, int sTargets, int eTargets) {
+        winPoints = points;
         numRounds = rounds;
         rows = rs;
         cols = cs;

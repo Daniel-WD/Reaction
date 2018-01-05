@@ -21,6 +21,7 @@ public class GameBackground extends View {
     private float mLScale = 0;
 
     private Paint mStrokePaint;
+    private int mPink, mGreen;
 
     public GameBackground(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -30,7 +31,9 @@ public class GameBackground extends View {
         mStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mStrokePaint.setStrokeWidth(mStrokeWidth);
         mStrokePaint.setStyle(Paint.Style.STROKE);
-        mStrokePaint.setColor(ContextCompat.getColor(context, R.color.pink));
+
+        mPink = ContextCompat.getColor(context, R.color.pink);
+        mGreen = ContextCompat.getColor(context, R.color.green);
     }
 
     @Override
@@ -50,18 +53,24 @@ public class GameBackground extends View {
         canvas.drawLine(mWidth/2 * (1-mLScale), mHeight-mStrokeWidth/2, mWidth/2 + mWidth/2 * mLScale, mHeight-mStrokeWidth/2, mStrokePaint);
     }
 
-    public void showLines() {
+    public void showLines(boolean win) {
+        updateColor(win);
         ObjectAnimator anim = ObjectAnimator.ofFloat(this, "lScale", 0, 1);
         anim.setInterpolator(new DecelerateInterpolator());
         anim.setDuration(300);
         anim.start();
     }
 
-    public void hideLines() {
+    public void hideLines(boolean win) {
+        updateColor(win);
         ObjectAnimator anim = ObjectAnimator.ofFloat(this, "lScale", 1, 0);
         anim.setInterpolator(new DecelerateInterpolator());
         anim.setDuration(200);
         anim.start();
+    }
+
+    private void updateColor(boolean win) {
+        mStrokePaint.setColor(win ? mGreen : mPink);
     }
 
     public void setLScale(float mLScale) {

@@ -326,13 +326,13 @@ public class LoadingView extends View {
         enterRemoveText.setInterpolator(new DecelerateInterpolator());
         enterRemoveText.start();
 
-        delay += 0;
+        delay += 100;
 
         mHandler.postDelayed(() -> {
             mTargetLayout.show();
         }, delay);
 
-        delay += getResources().getInteger(R.integer.showTargetsDuration);
+        delay += mTargetLayout.mCols*getResources().getInteger(R.integer.showOneTargetDuration);
 
         mHandler.postDelayed(() -> {
             mTargetLayout.hide();

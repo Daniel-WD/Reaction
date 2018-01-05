@@ -4,6 +4,6 @@
 
     <target
         android:name="@string/play_path"
-        android:animation="@animator/anim_play_cross_path" />
+        android:animation="@animator/anim_play_circle_path" />
 
 </animated-vector>

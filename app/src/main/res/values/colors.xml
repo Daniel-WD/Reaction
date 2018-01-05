@@ -3,6 +3,8 @@
     <color name="dark_snow">#161616</color>
     <color name="dark_pink">#85153B</color>
 
+    <color name="trans_snow">#28fefcfc</color>
+
     <color name="gray">#a8a7a8</color>
     <color name="red_dark">#cc527a</color>
     <color name="red_light">#e91e63</color>
@@ -10,14 +12,12 @@
     <color name="dark_one">#363636</color>
 
     <color name="dark_nero">#141414</color>
-    <color name="dark_dark_nero">#0a0a0a</color>
+    <!--<color name="dark_dark_nero">#0a0a0a</color>-->
+    <color name="dark_dark_nero">#000000</color>
 
     <color name="pink">#e91e63</color>
     <color name="electric_blue">#20fafa</color>
-
-    <color name="piiink">#1ee9bd</color>
-
-    <color name="green">#1ee825</color>
+    <color name="green">#1EE930</color>
 
     <color name="yellow_light">#e5eec1</color>
     <color name="green_light">#a2d4ab</color>
@@ -25,7 +25,11 @@
     <color name="blue_dark">#547a82</color>
     <color name="dark_three">#5a5050</color>
 
-    <color name="nero">#1F1F1F</color>
+    <color name="n">#1f1f1f</color><!-- std nero: 12% S-->
+
+    <!--<color name="nero">#000000</color>&lt;!&ndash; std nero: 12% S&ndash;&gt;-->
+
+    <color name="nero">#1a1a1a</color><!-- std nero: 12% S-->
     <color name="radicalRed">#FA3663</color>
     <color name="manatee">#87878A</color>
     <color name="nightShadz">#A32D48</color>
