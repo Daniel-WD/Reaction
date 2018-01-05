@@ -1,6 +1,5 @@
 package com.danielweidensdoerfer.reaction.game;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -21,10 +20,8 @@ import android.view.animation.DecelerateInterpolator;
 import com.danielweidensdoerfer.reaction.Database;
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
-import com.danielweidensdoerfer.reaction.game.generator.Item;
+import com.danielweidensdoerfer.reaction.itembase.Item;
 import com.danielweidensdoerfer.reaction.game.generator.Target;
-
-import java.util.ArrayList;
 
 public class GameView extends View {
 

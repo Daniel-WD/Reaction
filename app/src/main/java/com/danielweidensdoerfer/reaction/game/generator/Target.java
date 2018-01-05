@@ -1,6 +1,6 @@
 package com.danielweidensdoerfer.reaction.game.generator;
 
-import android.graphics.drawable.Drawable;
+import com.danielweidensdoerfer.reaction.itembase.Item;
 
 public abstract class Target {
 

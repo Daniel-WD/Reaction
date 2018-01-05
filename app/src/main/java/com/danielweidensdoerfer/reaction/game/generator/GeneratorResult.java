@@ -1,5 +1,7 @@
 package com.danielweidensdoerfer.reaction.game.generator;
 
+import com.danielweidensdoerfer.reaction.itembase.Item;
+
 public final class GeneratorResult {
 
     public final int points;

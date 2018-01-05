@@ -40,27 +40,120 @@
     <color name="nightShadz">#A32D48</color>
     <color name="nobel">#A0A0A0</color>
 
-    <color name="_1">#e8291c</color>
-    <color name="_2">#e81c60</color>
-    <color name="_3">#c91ce8</color>
-    <color name="_4">#671ce8</color>
-    <color name="_5">#1cd0e8</color>
-    <color name="_6">#1ca7e8</color>
-    <color name="_7">#1c8ce8</color>
-    <color name="_8">#1c3ae8</color>
-    <color name="_9">#1ce8d4</color>
-    <color name="_10">#1ce823</color>
-    <color name="_11">#89e81c</color>
-    <color name="_12">#d4e81c</color>
-    <color name="_13">#e8521c</color>
-    <color name="_14">#e84b1c</color>
-    <color name="_15">#e8961c</color>
-    <color name="_16">#e8b51c</color>
+    <!--<color name="_11">#ff6868</color>
+    <color name="_12">#ff4f4f</color>
+    <color name="_13">#FF3636</color>
+    <color name="_14">#c21616</color>&lt;!&ndash;main&ndash;&gt;
+    <color name="_15">#750707</color>-->
+
+
+
+    <color name="_11">#CF460D</color>
+    <color name="_12">#D92B0E</color>
+    <color name="_13">#c21616</color><!--main-->
+    <color name="_14">#D90E73</color>
+    <color name="_15">#CF0DCF</color>
+
+    <color name="_21">#CFC50D</color>
+    <color name="_22">#D9BB0E</color>
+    <color name="_23">#c29716</color><!--main-->
+    <color name="_24">#D9920E</color>
+    <color name="_25">#CF740D</color>
+
+    <color name="_31">#0DCF2C</color>
+    <color name="_32">#2CD90E</color>
+    <color name="_33">#6cc216</color><!--main-->
+    <color name="_34">#BAD90E</color>
+    <color name="_35">#CFC40D</color>
+
+    <color name="_41">#0DCFAC</color>
+    <color name="_42">#0ED97B</color>
+    <color name="_43">#16c242</color><!--main-->
+    <color name="_44">#15D90E</color>
+    <color name="_45">#57CF0D</color>
+
+    <color name="_51">#0D69CF</color>
+    <color name="_52">#0EA3D9</color>
+    <color name="_53">#16c2c2</color><!--main-->
+    <color name="_54">#0ED99F</color>
+    <color name="_55">#0DCF61</color>
+
+    <color name="_61">#430DCF</color>
+    <color name="_62">#0F0ED9</color>
+    <color name="_63">#1642c2</color><!--main-->
+    <color name="_64">#0E77D9</color>
+    <color name="_65">#0DA5CF</color>
+
+    <color name="_71">#CF0DBF</color>
+    <color name="_72">#AB0ED9</color>
+    <color name="_73">#6c16c2</color><!--main-->
+    <color name="_74">#3C0ED9</color>
+    <color name="_75">#0D16CF</color>
+
+    <color name="_81">#CF1B0D</color>
+    <color name="_82">#D90E41</color>
+    <color name="_83">#c21697</color><!--main-->
+    <color name="_84">#BD0ED9</color>
+    <color name="_85">#800DCF</color>
+
+<!--    <color name="_1">#c21616</color>
+    <color name="_2">#c29716</color>
+    <color name="_3">#6cc216</color>
+    <color name="_4">#16c242</color>
+    <color name="_5">#16c2c2</color>
+    <color name="_6">#1642c2</color>
+    <color name="_7">#6c16c2</color>
+    <color name="_8">#c21697</color>-->
+
+<!--
+    <color name="_1">#c21616</color>
+    <color name="_2">#c25616</color>
+    <color name="_3">#c29416</color>
+    <color name="_4">#b1c216</color>
+    <color name="_5">#73c216</color>
+    <color name="_6">#33c216</color>
+    <color name="_7">#16c239</color>
+    <color name="_8">#16c278</color>
+    <color name="_9">#16c2b6</color>
+    <color name="_10">#168fc2</color>
+    <color name="_11">#1650c2</color>
+    <color name="_12">#1c16c2</color>
+    <color name="_13">#5b16c2</color>
+    <color name="_14">#9a16c2</color>
+    <color name="_15">#c216ac</color>
+    <color name="_16">#c2166c</color>-->
+
+
+
+
+
+
+
+
+
+
+
+<!--    <color name="_1">#c22317</color>
+    <color name="_2">#c21750</color>
+    <color name="_3">#a817c2</color>
+    <color name="_4">#5617c2</color>
+    <color name="_5">#17aec2</color>
+    <color name="_6">#178cc2</color>
+    <color name="_7">#1775c2</color>
+    <color name="_8">#1731c2</color>
+    <color name="_9">#17c2b1</color>
+    <color name="_10">#17c21d</color>
+    <color name="_11">#72c217</color>
+    <color name="_12">#b1c217</color>
+    <color name="_13">#c24517</color>
+    <color name="_14">#c23f17</color>
+    <color name="_15">#c27e17</color>
+    <color name="_16">#c29717</color>
 
     <color name="_17">#9e9e9e</color>
     <color name="_18">#727272</color>
     <color name="_19">#607d8b</color>
-    <color name="_20">#455a64</color>
+    <color name="_20">#455a64</color>-->
 
 <!--    <color name="_1">#e82c1e</color>
     <color name="_2">#e81e61</color>

@@ -2,9 +2,11 @@ package com.danielweidensdoerfer.reaction;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -19,6 +21,7 @@ import com.danielweidensdoerfer.reaction.game.CrossView;
 import com.danielweidensdoerfer.reaction.game.GameBackground;
 import com.danielweidensdoerfer.reaction.game.GameManager;
 import com.danielweidensdoerfer.reaction.game.GameView;
+import com.danielweidensdoerfer.reaction.itembase.Itembase;
 import com.danielweidensdoerfer.reaction.loading.LoadingView;
 import com.danielweidensdoerfer.reaction.game.TimerView;
 import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
@@ -60,7 +63,25 @@ public class ReactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reaction);
 
+        int count = 8;
+        float[] c = {0, 0.88f, 0.76f};
+
+        for(int i = 0; i < count; i++) {
+            c[0] = 360/count * i;
+            int color = Color.HSVToColor(c);
+            int r = Color.red(color);
+            int g = Color.green(color);
+            int b = Color.blue(color);
+            String red = Integer.toString(r, 16);
+            String green = Integer.toString(g, 16);
+            String blue = Integer.toString(b, 16);
+            Log.d("TAG", "<color name=\"_" + String.valueOf(i+1) + "\">#" + red + green + blue + "</color>");
+        }
+
+
         Database.init(this);
+        Colorbase.init(this);
+        Itembase.init(this);
 
         gameManager = new GameManager(this);
 
