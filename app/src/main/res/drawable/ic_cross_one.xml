@@ -12,13 +12,13 @@
             android:name="@string/cross_path_a"
             android:strokeWidth="2"
             android:pathData="@string/cross_path_data_a"
-            android:strokeColor="@color/dark_snow" />
+            android:strokeColor="@color/trans_snow_dark" />
 
         <path
             android:name="@string/cross_path_b"
             android:strokeWidth="2"
             android:pathData="@string/cross_path_data_b"
-            android:strokeColor="@color/dark_snow" />
+            android:strokeColor="@color/trans_snow_dark" />
 
         <path
             android:trimPathEnd="0"

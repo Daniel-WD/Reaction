@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_snow">#161616</color>
-    <color name="dark_pink">#85153B</color>
+    <color name="dark_pink">#0C6056</color>
 
-    <color name="trans_snow">#28fefcfc</color>
+    <color name="trans_snow">#102332</color>
+    <color name="trans_snow_dark">#0F1C27</color>
+
+    <color name="nero">#031727</color><!-- std nero: 12% S-->
+    <color name="dark_dark_nero">#02101c</color>
+
+    <color name="pink">#18c29c</color>
+    <color name="electric_blue">#00ffc8</color>
+    <color name="green">#6CFFDE</color>
+    <color name="red">#367F6F</color>
+
+    <color name="snow">#ffffff</color><!--FEFCFC--><!--f0f0f1-->
+
 
     <color name="gray">#a8a7a8</color>
     <color name="red_dark">#cc527a</color>
@@ -13,11 +24,6 @@
 
     <color name="dark_nero">#141414</color>
     <!--<color name="dark_dark_nero">#0a0a0a</color>-->
-    <color name="dark_dark_nero">#000000</color>
-
-    <color name="pink">#e91e63</color>
-    <color name="electric_blue">#20fafa</color>
-    <color name="green">#1EE930</color>
 
     <color name="yellow_light">#e5eec1</color>
     <color name="green_light">#a2d4ab</color>
@@ -29,14 +35,34 @@
 
     <!--<color name="nero">#000000</color>&lt;!&ndash; std nero: 12% S&ndash;&gt;-->
 
-    <color name="nero">#1a1a1a</color><!-- std nero: 12% S-->
     <color name="radicalRed">#FA3663</color>
     <color name="manatee">#87878A</color>
     <color name="nightShadz">#A32D48</color>
-    <color name="snow">#FEFCFC</color>
     <color name="nobel">#A0A0A0</color>
 
-    <color name="_1">#e82c1e</color>
+    <color name="_1">#e8291c</color>
+    <color name="_2">#e81c60</color>
+    <color name="_3">#c91ce8</color>
+    <color name="_4">#671ce8</color>
+    <color name="_5">#1cd0e8</color>
+    <color name="_6">#1ca7e8</color>
+    <color name="_7">#1c8ce8</color>
+    <color name="_8">#1c3ae8</color>
+    <color name="_9">#1ce8d4</color>
+    <color name="_10">#1ce823</color>
+    <color name="_11">#89e81c</color>
+    <color name="_12">#d4e81c</color>
+    <color name="_13">#e8521c</color>
+    <color name="_14">#e84b1c</color>
+    <color name="_15">#e8961c</color>
+    <color name="_16">#e8b51c</color>
+
+    <color name="_17">#9e9e9e</color>
+    <color name="_18">#727272</color>
+    <color name="_19">#607d8b</color>
+    <color name="_20">#455a64</color>
+
+<!--    <color name="_1">#e82c1e</color>
     <color name="_2">#e81e61</color>
     <color name="_3">#ca1ee8</color>
     <color name="_4">#681ee8</color>
@@ -55,7 +81,7 @@
     <color name="_17">#9e9e9e</color>
     <color name="_18">#727272</color>
     <color name="_19">#607d8b</color>
-    <color name="_20">#455a64</color>
+    <color name="_20">#455a64</color>-->
 
 <!--    <color name="_1">#f44336</color>
     <color name="_2">#e91e63</color>

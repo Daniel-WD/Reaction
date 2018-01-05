@@ -152,8 +152,8 @@ public class LoadingView extends View {
         mBgRect = new RectF(mWidth/2-radius, mHeight/2-radius,
                 mWidth - (mWidth/2-radius), mHeight/2+radius);
 
-        float targetsHeight = radius/2.3f;
-        mTargetLayout = new TargetLayout(getContext(), mBgRect.left, mBgRect.centerY()-targetsHeight/4,
+        float targetsHeight = radius/2f;
+        mTargetLayout = new TargetLayout(getContext(), mBgRect.left, mBgRect.centerY()-targetsHeight/3,
                 mBgRect.width(), targetsHeight);
     }
 

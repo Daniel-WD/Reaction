@@ -8,8 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import com.danielweidensdoerfer.reaction.R;
@@ -21,7 +19,7 @@ public class GameBackground extends View {
     private float mLScale = 0;
 
     private Paint mStrokePaint;
-    private int mPink, mGreen;
+    private int mRed, mGreen;
 
     public GameBackground(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -32,7 +30,7 @@ public class GameBackground extends View {
         mStrokePaint.setStrokeWidth(mStrokeWidth);
         mStrokePaint.setStyle(Paint.Style.STROKE);
 
-        mPink = ContextCompat.getColor(context, R.color.pink);
+        mRed = ContextCompat.getColor(context, R.color.red);
         mGreen = ContextCompat.getColor(context, R.color.green);
     }
 
@@ -70,7 +68,7 @@ public class GameBackground extends View {
     }
 
     private void updateColor(boolean win) {
-        mStrokePaint.setColor(win ? mGreen : mPink);
+        mStrokePaint.setColor(win ? mGreen : mRed);
     }
 
     public void setLScale(float mLScale) {

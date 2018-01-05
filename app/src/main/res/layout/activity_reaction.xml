@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
         android:text="@string/loose"
-        android:textColor="@color/pink"
+        android:textColor="@color/red"
         android:textSize="30sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -190,7 +190,14 @@ public class GameManager {
             mAct.gameView.hide();
         }, delay);
 
-        delay += 500;
+        delay += 300;
+
+        //hide timerview
+        mAct.handler.postDelayed(() -> {
+            mAct.timerView.hide();
+        }, delay);
+
+        delay += 100;
 
         //move timeView to center relative-->translate
         Path path = new Path();
@@ -209,11 +216,6 @@ public class GameManager {
         moveTVAnim.setDuration(200);
         moveTVAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         moveTVAnim.start();
-
-        //hide timerview
-        mAct.handler.postDelayed(() -> {
-            mAct.timerView.hide();
-        }, delay);
 
         //scale game bg
         mAct.gameBackground.setVisibility(View.VISIBLE);
@@ -278,7 +280,7 @@ public class GameManager {
         if(win) {
             greenRed = ContextCompat.getColor(mAct, R.color.green);
         } else {
-            greenRed = ContextCompat.getColor(mAct, R.color.pink);
+            greenRed = ContextCompat.getColor(mAct, R.color.red);
         }
         ValueAnimator colorAnim = ValueAnimator.ofArgb(pink, greenRed);
         colorAnim.addUpdateListener(animation -> {
@@ -495,8 +497,8 @@ public class GameManager {
         if(points > Database.recordPoints) {
             Database.recordPoints = points;
         }
-        if(currentRound > Database.roundRecord) {
-            Database.roundRecord = currentRound;
+        if(currentRound-1 > Database.roundRecord) {
+            Database.roundRecord = currentRound-1;
         }
 
         currentRound = 0;
