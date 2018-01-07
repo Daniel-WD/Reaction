@@ -3,10 +3,10 @@ package com.danielweidensdoerfer.reaction.game.generator;
 import android.content.Context;
 import android.util.Log;
 
-import com.danielweidensdoerfer.reaction.Colorbase;
-import com.danielweidensdoerfer.reaction.R;
-import com.danielweidensdoerfer.reaction.itembase.Item;
-import com.danielweidensdoerfer.reaction.itembase.Itembase;
+import com.danielweidensdoerfer.reaction.ReactionActivity;
+import com.danielweidensdoerfer.reaction.bases.Colorbase;
+import com.danielweidensdoerfer.reaction.bases.itembase.Item;
+import com.danielweidensdoerfer.reaction.bases.itembase.Itembase;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,25 +15,58 @@ public class GridGenerator {
 
     private static final String TAG = GridGenerator.class.getSimpleName();
 
-    public static final int CREATE_1_ITEM = 0;
-    public static final int CREATE_ITEM_CAT = 1;
-    public static final int CREATE_ALL_ITEMS = 2;
+    private static final int ADDITIONAL_POINTS = 100;
+    private static final long ADDITIONAL_TIME = 1000;
+    private static final int STD_ROUNDS = 3;
+    private static final long START_TIME = 6000;
+    private static final int STD_TARGETS = 1;
 
-    public static final int COLORIZE_RANDOM = 0;
-    public static final int COLORIZE_ITEM_BOUNDED = 1;
-    public static final int COLORIZE_ITEM_CAT_BOUNDED = 2;
+    private static final int CREATE_1_ITEM = 0;
+    private static final int CREATE_ITEM_CAT = 1;
+    private static final int CREATE_ALL_ITEMS = 2;
 
+    private static final int COLORIZE_RANDOM = 0;
+    private static final int COLORIZE_ITEM_BOUNDED = 1;
+    private static final int COLORIZE_ITEM_CAT_BOUNDED = 2;
+
+
+    private static int sConfigCount = 100;
     private static LevelConfig[] configs = new LevelConfig[] {
-            new LevelConfig(100, 4, 4, 4, 5000, 4000, 1, 1),
-            new LevelConfig(200, 5, 5, 4, 6000, 4000, 1, 1),
-            new LevelConfig(300, 6, 5, 5, 9000, 7000, 1, 1),
-            new LevelConfig(400, 7, 6, 5, 12000, 10000, 1, 1)
+            new LevelConfig(100, 4, 4, 4, 5000, 4000, 1),
+            new LevelConfig(200, 5, 5, 4, 6000, 4000, 1),
+            new LevelConfig(300, 6, 5, 5, 9000, 7000, 1),
+            new LevelConfig(400, 7, 6, 5, 12000, 10000, 1)
     };
 
     private static  Random random = new Random();
 
-    public static void init(Context context) {
+    public static void init(ReactionActivity act) {
 
+        float gridRatio = (float)act.gameView.getWidth()/(float)act.gameView.getHeight();
+
+        configs = new LevelConfig[sConfigCount];
+        for(int i = 0; i < configs.length; i++) {
+            configs[i] = createConfig(gridRatio, i);
+        }
+
+        for(LevelConfig config : configs) {
+            Log.d("TAG", "Points:" + config.winPoints + " Rounds:" + config.numRounds + " Rows:" + config.rows
+                    + " Cols:" + config.cols + " startTime:" + config.startTime + " endTime:" + config.endTime);
+        }
+    }
+
+    private static LevelConfig createConfig(float ratio, int n) {
+        int rows = 4;
+        int cols = 4;
+        for(int i = 0; i < 2*n; i++) {
+            float colDiff = Math.abs(((float)cols+1f)/(float)rows -ratio);
+            float rowDiff = Math.abs((float)cols/((float)rows+1f) -ratio);
+            if(colDiff < rowDiff) cols++; else rows++;
+        }
+
+        long startTime = START_TIME+n*ADDITIONAL_TIME;
+        return new LevelConfig((n+1)*ADDITIONAL_POINTS, STD_ROUNDS, rows, cols,
+                startTime, startTime-(STD_ROUNDS-1)*1000, STD_TARGETS);
     }
 
     private static LevelConfig findConfig(int round) {
@@ -57,7 +90,7 @@ public class GridGenerator {
 
         colorize(field, COLORIZE_RANDOM);
 
-        Target[] targets = new Target[config.targets()];
+        Target[] targets = new Target[config.targets];
 
         fillTargets(targets, field);
 

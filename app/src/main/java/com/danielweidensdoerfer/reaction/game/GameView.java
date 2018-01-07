@@ -17,10 +17,10 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
-import com.danielweidensdoerfer.reaction.Database;
+import com.danielweidensdoerfer.reaction.bases.Database;
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
-import com.danielweidensdoerfer.reaction.itembase.Item;
+import com.danielweidensdoerfer.reaction.bases.itembase.Item;
 import com.danielweidensdoerfer.reaction.game.generator.Target;
 
 public class GameView extends View {

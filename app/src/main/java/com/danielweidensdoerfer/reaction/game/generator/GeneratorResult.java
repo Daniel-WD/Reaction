@@ -1,6 +1,6 @@
 package com.danielweidensdoerfer.reaction.game.generator;
 
-import com.danielweidensdoerfer.reaction.itembase.Item;
+import com.danielweidensdoerfer.reaction.bases.itembase.Item;
 
 public final class GeneratorResult {
 

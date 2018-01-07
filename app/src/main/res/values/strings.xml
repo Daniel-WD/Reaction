@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Reaction</string>
-    <string name="app_name_caps">REACTION</string>
+    <string name="app_name">Discipline</string>
+    <string name="app_name_caps">DISCIPLINE</string>
     <string name="settings">Settings</string>
 
     <string name="remove">REMOVE</string>
@@ -12,10 +12,10 @@
     <string name="loose">YOU LOST</string>
     <string name="remove_points">-%1$d</string>
     <string name="game_points_template">%1$d POINTS</string>
-    <string name="points_template">Record: %1$d Points</string>
-    <string name="played_rounds_template">Played Rounds: %1$d</string>
-    <string name="round_record_template">Round Record: %1$d</string>
-    <string name="removed_objects_template">Removed Objects: %1$d</string>
+    <string name="record_points_template">Record: %1$d Points</string>
+    <string name="played_rounds_template">You played %1$d Rounds</string>
+    <string name="round_record_template">You reached Round %1$d</string>
+    <string name="removed_objects_template">You removed %1$d Objects</string>
     <string name="current_round_template">Round %1$d</string>
     <string name="time_template">%1$ds</string>
 

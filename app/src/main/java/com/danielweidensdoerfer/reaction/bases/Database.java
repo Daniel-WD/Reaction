@@ -1,7 +1,9 @@
-package com.danielweidensdoerfer.reaction;
+package com.danielweidensdoerfer.reaction.bases;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.danielweidensdoerfer.reaction.ReactionActivity;
 
 public class Database {
 

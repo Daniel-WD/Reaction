@@ -14,7 +14,7 @@ import android.view.animation.AnticipateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
-import com.danielweidensdoerfer.reaction.Database;
+import com.danielweidensdoerfer.reaction.bases.Database;
 import com.danielweidensdoerfer.reaction.R;
 import com.danielweidensdoerfer.reaction.ReactionActivity;
 import com.danielweidensdoerfer.reaction.game.generator.GeneratorResult;
@@ -46,8 +46,6 @@ public class GameManager {
         mAct.getWindowManager().getDefaultDisplay().getSize(size);
         mActWidth = size.x;
         mActHeight = size.y;
-
-        GridGenerator.init(activity);
     }
 
     public void startGame() {
@@ -100,13 +98,13 @@ public class GameManager {
         delay += 100;
 
         //fade content out
-        mAct.tvTitle.animate().withEndAction(() -> {
-            mAct.tvTitle.animate().setListener(null);
-            ViewUtils.visibility(View.INVISIBLE, mAct.tvTitle, mAct.tvPoints, mAct.vDivider,
+        mAct.reflectingLayout.animate().withEndAction(() -> {
+            mAct.reflectingLayout.animate().setListener(null);
+            ViewUtils.visibility(View.INVISIBLE, mAct.reflectingLayout, mAct.tvPoints, mAct.vDivider,
                     mAct.tvPlayedRounds, mAct.tvRoundRecord, mAct.tvRemovedObjects);
         });
         float translateY = -mAct.tvPlayedRounds.getHeight()/4;
-        ViewAnimUtils.translateYAlphaAnimOut(translateY, delay, 200, mAct.tvTitle,
+        ViewAnimUtils.translateYAlphaAnimOut(translateY, delay, 200, mAct.reflectingLayout,
                 mAct.tvPoints, mAct.vDivider, mAct.tvPlayedRounds, mAct.tvRoundRecord,
                 mAct.tvRemovedObjects);
 
@@ -467,10 +465,10 @@ public class GameManager {
 
                 d += 300;
 
-                ViewUtils.visibility(View.VISIBLE, mAct.tvTitle, mAct.tvPoints, mAct.vDivider,
+                ViewUtils.visibility(View.VISIBLE, mAct.reflectingLayout, mAct.tvPoints, mAct.vDivider,
                         mAct.tvPlayedRounds, mAct.tvRoundRecord, mAct.tvRemovedObjects);
                 float translateY = -mAct.tvPlayedRounds.getHeight()/4;
-                ViewAnimUtils.translateYAlphaAnimIn(translateY, d, 300, mAct.tvTitle,
+                ViewAnimUtils.translateYAlphaAnimIn(translateY, d, 300, mAct.reflectingLayout,
                         mAct.tvPoints, mAct.vDivider, mAct.tvPlayedRounds, mAct.tvRoundRecord,
                         mAct.tvRemovedObjects);
             }, delay);
@@ -584,7 +582,7 @@ public class GameManager {
                 .rotation(360*10)
                 .setDuration(250)
                 .setStartDelay(delay)
-                .withEndAction(() -> mAct.btnRepeat.setVisibility(View.VISIBLE))
+                .withEndAction(() -> mAct.btnRepeat.setVisibility(View.INVISIBLE))
                 .start();
 
         //hide home button
@@ -593,7 +591,7 @@ public class GameManager {
                 .alpha(0f)
                 .setStartDelay(delay)
                 .setDuration(100)
-                .withEndAction(() -> mAct.btnHome.setVisibility(View.VISIBLE))
+                .withEndAction(() -> mAct.btnHome.setVisibility(View.INVISIBLE))
                 .start();
 
         delay += 100;

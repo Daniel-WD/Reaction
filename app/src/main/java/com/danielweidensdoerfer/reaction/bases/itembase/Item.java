@@ -1,11 +1,8 @@
-package com.danielweidensdoerfer.reaction.itembase;
+package com.danielweidensdoerfer.reaction.bases.itembase;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Item {
 

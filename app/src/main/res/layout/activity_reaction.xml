@@ -200,26 +200,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />-->
 
-    <TextView
-        android:id="@+id/tvTitle"
+    <com.danielweidensdoerfer.reaction.ReflectingLayout
+        android:id="@+id/reflectionLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/flamenco_light"
-        android:text="@string/app_name_caps"
-        android:textColor="@android:color/white"
-        android:textSize="72sp"
+        android:layout_height="104sp"
         app:layout_constraintBottom_toTopOf="@+id/tvPoints"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.608" />
+        app:layout_constraintVertical_bias="0.608"
+        android:orientation="vertical">
+
+        <TextView
+            android:includeFontPadding="false"
+            android:visibility="visible"
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="62sp"
+            android:fontFamily="@font/flamenco_light"
+            android:text="@string/app_name_caps"
+            android:textColor="@android:color/white"
+            android:textSize="68sp"/>
+
+    </com.danielweidensdoerfer.reaction.ReflectingLayout>
 
     <TextView
         android:id="@+id/tvPoints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:text="@string/points_template"
+        android:text="@string/record_points_template"
         android:textColor="@color/snow"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"

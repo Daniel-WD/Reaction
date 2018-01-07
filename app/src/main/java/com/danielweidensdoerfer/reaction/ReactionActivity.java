@@ -17,11 +17,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.danielweidensdoerfer.reaction.bases.Colorbase;
+import com.danielweidensdoerfer.reaction.bases.Database;
 import com.danielweidensdoerfer.reaction.game.CrossView;
 import com.danielweidensdoerfer.reaction.game.GameBackground;
 import com.danielweidensdoerfer.reaction.game.GameManager;
 import com.danielweidensdoerfer.reaction.game.GameView;
-import com.danielweidensdoerfer.reaction.itembase.Itembase;
+import com.danielweidensdoerfer.reaction.bases.itembase.Itembase;
+import com.danielweidensdoerfer.reaction.game.generator.GridGenerator;
 import com.danielweidensdoerfer.reaction.loading.LoadingView;
 import com.danielweidensdoerfer.reaction.game.TimerView;
 import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
@@ -49,6 +52,7 @@ public class ReactionActivity extends AppCompatActivity {
     public ImageButton btnRepeat;
     public TextView tvLoose;
     public ImageButton btnHome;
+    public ReflectingLayout reflectingLayout;
     //public View resultBackground;
     //public TextView tvTask;
 
@@ -78,7 +82,6 @@ public class ReactionActivity extends AppCompatActivity {
             Log.d("TAG", "<color name=\"_" + String.valueOf(i+1) + "\">#" + red + green + blue + "</color>");
         }
 
-
         Database.init(this);
         Colorbase.init(this);
         Itembase.init(this);
@@ -107,8 +110,11 @@ public class ReactionActivity extends AppCompatActivity {
         btnRepeat = findViewById(R.id.btnRepeat);
         tvLoose = findViewById(R.id.tvLoose);
         btnHome = findViewById(R.id.btnHome);
+        reflectingLayout = findViewById(R.id.reflectionLayout);
 //        resultBackground = findViewById(R.id.resultBackground);
         //tvTask = findViewById(R.id.tvTask);
+
+        gameView.post(() -> GridGenerator.init(this));
 
         btnHome.setOnClickListener(v -> {
             updateValues();
@@ -122,6 +128,15 @@ public class ReactionActivity extends AppCompatActivity {
         btnRepeat.setOnClickListener(v -> {
             gameManager.closeLooseScreen(true);
         });
+
+        reflectingLayout.setAlpha(0);
+        //tvTitle.setAlpha(0);
+        tvPoints.setAlpha(0);
+        tvPlayedRounds.setAlpha(0);
+        tvRoundRecord.setAlpha(0);
+        tvRemovedObjects.setAlpha(0);
+        fStart.setAlpha(0);
+        vDivider.setScaleX(0);
     }
 
     @Override
@@ -139,15 +154,17 @@ public class ReactionActivity extends AppCompatActivity {
         if(!mStarted) handler.postDelayed(() -> {
             long delay = 100;
 
-            tvTitle.setTranslationY(tvTitle.getHeight()/5);
-            tvTitle.setAlpha(0);
-            tvTitle.animate()
+            reflectingLayout.setTranslationY(tvTitle.getHeight()/5);
+            reflectingLayout.setAlpha(0);
+            reflectingLayout.animate()
                     .setStartDelay(delay)
                     .setInterpolator(new DecelerateInterpolator())
-                    .setDuration(300)
+                    .setDuration(1000)
                     .alpha(1)
                     .translationY(0)
                     .start();
+            ValueAnimator titleUpdater = ValueAnimator.ofFloat(0, 1);
+//            titleUpdater.addUpdateListener(animation -> tvTitle);
 
             delay += 200;
 
@@ -197,7 +214,7 @@ public class ReactionActivity extends AppCompatActivity {
     }
 
     public void updateValues() {
-        tvPoints.setText(getString(R.string.points_template, Database.recordPoints));
+        tvPoints.setText(getString(R.string.record_points_template, Database.recordPoints));
         tvPlayedRounds.setText(getString(R.string.played_rounds_template, Database.playedRounds));
         tvRoundRecord.setText(getString(R.string.round_record_template, Database.roundRecord));
         tvRemovedObjects.setText(getString(R.string.removed_objects_template, Database.removedObjects));
@@ -224,7 +241,7 @@ public class ReactionActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(gameManager.isInLooseScreen) btnHome.callOnClick();
-        if(tvTitle.getVisibility() == View.VISIBLE) super.onBackPressed();
+        if(reflectingLayout.getVisibility() == View.VISIBLE) super.onBackPressed();
     }
 
     /*    @Override

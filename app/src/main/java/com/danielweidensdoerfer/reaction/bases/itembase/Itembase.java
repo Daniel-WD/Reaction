@@ -1,4 +1,4 @@
-package com.danielweidensdoerfer.reaction.itembase;
+package com.danielweidensdoerfer.reaction.bases.itembase;
 
 import android.content.Context;
 

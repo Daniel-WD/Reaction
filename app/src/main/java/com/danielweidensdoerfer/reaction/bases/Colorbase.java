@@ -1,6 +1,9 @@
-package com.danielweidensdoerfer.reaction;
+package com.danielweidensdoerfer.reaction.bases;
 
 import android.support.v4.content.ContextCompat;
+
+import com.danielweidensdoerfer.reaction.R;
+import com.danielweidensdoerfer.reaction.ReactionActivity;
 
 public class Colorbase {
 

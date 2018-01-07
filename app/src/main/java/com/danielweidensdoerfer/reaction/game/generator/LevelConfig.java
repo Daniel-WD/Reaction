@@ -5,20 +5,19 @@ class LevelConfig {
     final int winPoints;
     final int numRounds;
     final int rows, cols;
-    private final long startTime, endTime;
-    private final int startTargets, endTargets;
+    final int targets;
+    final long startTime, endTime;
 
     private float fraction = 0;
 
-    LevelConfig(int points, int rounds, int rs, int cs, long sTime, long eTime, int sTargets, int eTargets) {
+    LevelConfig(int points, int rounds, int rs, int cs, long sTime, long eTime, int targets) {
         winPoints = points;
         numRounds = rounds;
         rows = rs;
         cols = cs;
         startTime = sTime;
         endTime = eTime;
-        startTargets = sTargets;
-        endTargets = eTargets;
+        this.targets = targets;
     }
 
     void setCurrentRound(int round) {
@@ -28,10 +27,6 @@ class LevelConfig {
 
     long time() {
         return startTime + (long)(fraction*(float)(endTime-startTime));
-    }
-
-    int targets() {
-        return startTargets + (int) (fraction*(float)(endTargets-startTargets));
     }
 
 }
