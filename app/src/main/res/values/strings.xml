@@ -1,4 +1,28 @@
 <resources>
+    <!-- TUTORIAL -->
+    <string name="intro_title_one">INTRODUCTION</string>
+    <string name="intro_content_one">
+        DISCIPLINE is a round based game, where
+        you have to get as far as your skills allow you
+    </string>
+
+    <string name="intro_title_two">SIMPLE</string>
+    <string name="intro_content_two">
+        The only thing you have to do is to remember all objects that will
+        be shown and remove them from a grid of mixed symbols
+    </string>
+
+    <string name="intro_title_three">CHALLENGING</string>
+    <string name="intro_content_three">
+        Each round is getting trickier and there is a time limit you have to keep\n
+        You can click a wrong symbol three times
+    </string>
+
+    <string name="intro_title_four">IMPROVING</string>
+    <string name="intro_content_four">
+        If you play the game more often, you\'ll get better and better and your skills will increase.
+    </string>
+
     <string name="app_name">Discipline</string>
     <string name="app_name_caps">DISCIPLINE</string>
     <string name="settings">Settings</string>
@@ -12,7 +36,7 @@
     <string name="loose">YOU LOST</string>
     <string name="remove_points">-%1$d</string>
     <string name="game_points_template">%1$d POINTS</string>
-    <string name="record_points_template">Record: %1$d Points</string>
+    <string name="record_points_template">%1$d Points</string>
     <string name="played_rounds_template">You played %1$d Rounds</string>
     <string name="round_record_template">You reached Round %1$d</string>
     <string name="removed_objects_template">You removed %1$d Objects</string>

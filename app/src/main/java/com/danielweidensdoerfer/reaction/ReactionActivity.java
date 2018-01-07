@@ -2,13 +2,14 @@ package com.danielweidensdoerfer.reaction;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -25,11 +26,14 @@ import com.danielweidensdoerfer.reaction.game.GameManager;
 import com.danielweidensdoerfer.reaction.game.GameView;
 import com.danielweidensdoerfer.reaction.bases.itembase.Itembase;
 import com.danielweidensdoerfer.reaction.game.generator.GridGenerator;
+import com.danielweidensdoerfer.reaction.helper.ReflectingLayout;
 import com.danielweidensdoerfer.reaction.loading.LoadingView;
 import com.danielweidensdoerfer.reaction.game.TimerView;
 import com.danielweidensdoerfer.reaction.utils.ViewAnimUtils;
 
 public class ReactionActivity extends AppCompatActivity {
+
+    private static int RQ_INTRO_ACTIVITY = 1;
 
     public TextView tvTitle;
     public TextView tvPoints;
@@ -62,10 +66,17 @@ public class ReactionActivity extends AppCompatActivity {
 
     private static boolean mStarted = false;
 
+    public int width, height;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reaction);
+
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        width = size.x;
+        height = size.y;
 
         int count = 8;
         float[] c = {0, 0.88f, 0.76f};
@@ -129,14 +140,7 @@ public class ReactionActivity extends AppCompatActivity {
             gameManager.closeLooseScreen(true);
         });
 
-        reflectingLayout.setAlpha(0);
-        //tvTitle.setAlpha(0);
-        tvPoints.setAlpha(0);
-        tvPlayedRounds.setAlpha(0);
-        tvRoundRecord.setAlpha(0);
-        tvRemovedObjects.setAlpha(0);
-        fStart.setAlpha(0);
-        vDivider.setScaleX(0);
+        prepareEnterAnim();
     }
 
     @Override
@@ -147,70 +151,79 @@ public class ReactionActivity extends AppCompatActivity {
         ObjectAnimator rotation = ObjectAnimator.ofFloat(vStartBg, "rotation", 0, 360);
         rotation.setInterpolator(new LinearInterpolator());
         rotation.setRepeatCount(ValueAnimator.INFINITE);
-        rotation.setDuration(10000);
+        rotation.setDuration(15000);
         rotation.start();
 
         //enter animations
         if(!mStarted) handler.postDelayed(() -> {
-            long delay = 100;
-
-            reflectingLayout.setTranslationY(tvTitle.getHeight()/5);
-            reflectingLayout.setAlpha(0);
-            reflectingLayout.animate()
-                    .setStartDelay(delay)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .setDuration(1000)
-                    .alpha(1)
-                    .translationY(0)
-                    .start();
-            ValueAnimator titleUpdater = ValueAnimator.ofFloat(0, 1);
-//            titleUpdater.addUpdateListener(animation -> tvTitle);
-
-            delay += 200;
-
-            tvPoints.setAlpha(0);
-            tvPoints.setTranslationY(tvPoints.getHeight()/3);
-            tvPoints.animate()
-                    .setStartDelay(delay)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .setDuration(200)
-                    .alpha(1)
-                    .translationY(0)
-                    .start();
-
-            delay += 100;
-
-            vDivider.setScaleX(0);
-            vDivider.animate()
-                    .setStartDelay(delay)
-                    .setInterpolator(new AccelerateDecelerateInterpolator())
-                    .setDuration(200)
-                    .scaleX(1)
-                    .start();
-
-            float translateY = -tvPlayedRounds.getHeight()/4;
-            delay += 100;
-            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, 300, tvPlayedRounds);
-            delay += 100;
-            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, 300, tvRoundRecord);
-            delay += 100;
-            ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, 300, tvRemovedObjects);
-            delay += 300;
-
-            fStart.setAlpha(0);
-            fStart.setScaleX(0);
-            fStart.setScaleY(0);
-            fStart.animate()
-                    .setDuration(300)
-                    .setStartDelay(delay)
-                    .setInterpolator(new OvershootInterpolator(3F))
-                    .scaleX(1)
-                    .scaleY(1)
-                    .alpha(1)
-                    .start();
+            startEnterAnim();
         }, 100);
 
         mStarted = true;
+    }
+
+    private void prepareEnterAnim() {
+        reflectingLayout.setAlpha(0);
+        tvPoints.setAlpha(0);
+        tvPlayedRounds.setAlpha(0);
+        tvRoundRecord.setAlpha(0);
+        tvRemovedObjects.setAlpha(0);
+        fStart.setAlpha(0);
+        vDivider.setScaleX(0);
+    }
+
+    private void startEnterAnim() {
+        long delay = 100;
+
+        reflectingLayout.setTranslationY(tvTitle.getHeight()/3);
+        reflectingLayout.setAlpha(0);
+        reflectingLayout.animate()
+                .setStartDelay(delay)
+                .setInterpolator(new DecelerateInterpolator())
+                .setDuration(1500)
+                .alpha(1)
+                .translationY(0)
+                .start();
+
+        delay += 500;
+
+        tvPoints.setAlpha(0);
+        tvPoints.setTranslationY(-tvPoints.getHeight());
+        tvPoints.animate()
+                .setStartDelay(delay)
+                .setInterpolator(new DecelerateInterpolator())
+                .setDuration(300)
+                .alpha(1)
+                .translationY(0)
+                .start();
+
+        delay += 200;
+
+        vDivider.setScaleY(0);
+        vDivider.setScaleX(0);
+        vDivider.animate()
+                .setStartDelay(delay)
+                .setInterpolator(new DecelerateInterpolator())
+                .setDuration(300)
+                .scaleX(1)
+                .scaleY(1)
+                .start();
+
+        delay += 200;
+        float translateY = tvPlayedRounds.getHeight();
+        ViewAnimUtils.translateYAlphaAnimIn(translateY, delay, 300, tvPlayedRounds, tvRoundRecord, tvRemovedObjects);
+        delay += 400;
+
+        float tY = height - fStart.getY();
+        fStart.setAlpha(0);
+        fStart.setTranslationY(tY);
+        fStart.animate()
+                .setDuration(800)
+                .setStartDelay(delay)
+                .setInterpolator(new OvershootInterpolator(2F))
+                .alpha(1)
+                .translationY(1)
+                .start();
     }
 
     public void updateValues() {
@@ -226,10 +239,25 @@ public class ReactionActivity extends AppCompatActivity {
         Database.load();
         updateValues();
 
+        if(Database.firstStart) {
+            Database.firstStart = false;
+            prepareEnterAnim();
+            Intent intent = new Intent(getBaseContext(), IntroActivity.class);
+            startActivityForResult(intent, RQ_INTRO_ACTIVITY);
+        }
+
         //hide status bar
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RQ_INTRO_ACTIVITY) {
+            startEnterAnim();
+        }
     }
 
     @Override

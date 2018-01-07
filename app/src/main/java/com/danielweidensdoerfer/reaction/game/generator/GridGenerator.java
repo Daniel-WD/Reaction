@@ -58,7 +58,7 @@ public class GridGenerator {
     private static LevelConfig createConfig(float ratio, int n) {
         int rows = 4;
         int cols = 4;
-        for(int i = 0; i < 2*n; i++) {
+        for(int i = 0; i < n; i++) {
             float colDiff = Math.abs(((float)cols+1f)/(float)rows -ratio);
             float rowDiff = Math.abs((float)cols/((float)rows+1f) -ratio);
             if(colDiff < rowDiff) cols++; else rows++;

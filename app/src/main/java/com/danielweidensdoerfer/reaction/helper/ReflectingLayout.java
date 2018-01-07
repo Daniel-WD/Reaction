@@ -1,4 +1,4 @@
-package com.danielweidensdoerfer.reaction;
+package com.danielweidensdoerfer.reaction.helper;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

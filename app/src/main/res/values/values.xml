@@ -13,10 +13,10 @@
 
     <dimen name="timerTextSize">24sp</dimen>
 
-    <integer name="showRoundDuration">500</integer>
+    <integer name="showRoundDuration">400</integer>
     <integer name="showOneTargetDuration">1000</integer>
-    <integer name="showTimeDuration">500</integer>
-    <integer name="showCountdownNumberDuration">350</integer>
+    <integer name="showTimeDuration">300</integer>
+    <integer name="showCountdownNumberDuration">250</integer>
 
     <!-- GameView -->
     <dimen name="blockPadding">10dp</dimen>

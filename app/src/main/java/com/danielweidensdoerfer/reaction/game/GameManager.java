@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.danielweidensdoerfer.reaction.utils.ViewUtils;
 public class GameManager {
 
     private ReactionActivity mAct;
-    private int mActWidth, mActHeight;
 
     public static final int BONUS_FOR_TIME = 20;
 
@@ -41,11 +39,6 @@ public class GameManager {
 
     public GameManager(ReactionActivity activity) {
         mAct = activity;
-
-        Point size = new Point();
-        mAct.getWindowManager().getDefaultDisplay().getSize(size);
-        mActWidth = size.x;
-        mActHeight = size.y;
     }
 
     public void startGame() {
@@ -113,7 +106,7 @@ public class GameManager {
                 .setDuration(200)
                 .setStartDelay(delay)
                 .setInterpolator(new OvershootInterpolator(1))
-                .y(mActHeight/2 - mAct.fStart.getHeight()/2)
+                .y(mAct.height/2 - mAct.fStart.getHeight()/2)
                 .start();
         delay += 200;
 
@@ -151,12 +144,12 @@ public class GameManager {
         mAct.timerView.setTranslationY(0);
 
         //move timeView
-        float startX = mActWidth/2 - mAct.timerView.getWidth()/2;
-        float startY = mActHeight/2 - mAct.timerView.getHeight()/2;
+        float startX = mAct.width/2 - mAct.timerView.getWidth()/2;
+        float startY = mAct.height/2 - mAct.timerView.getHeight()/2;
         Path path = new Path();
         path.moveTo(startX, startY);
-        path.cubicTo(startX + mActWidth/4, startY,
-                mAct.timerView.getX(), startY - mActHeight/4,
+        path.cubicTo(startX + mAct.width/4, startY,
+                mAct.timerView.getX(), startY - mAct.height/4,
                 mAct.timerView.getX(), mAct.timerView.getY());
 
         ObjectAnimator moveTVAnim = ObjectAnimator.ofFloat(mAct.timerView,
@@ -199,8 +192,8 @@ public class GameManager {
 
         //move timeView to center relative-->translate
         Path path = new Path();
-        float endX = mActWidth/2 - mAct.timerView.getWidth()/2;
-        float endY = mActHeight/2 - mAct.timerView.getHeight()/2;
+        float endX = mAct.width/2 - mAct.timerView.getWidth()/2;
+        float endY = mAct.height/2 - mAct.timerView.getHeight()/2;
         float xDist = mAct.timerView.getX() - endX;
         float yDist = endY - mAct.timerView.getY();
         path.moveTo(0, 0);
@@ -297,7 +290,7 @@ public class GameManager {
         fillPoints();
 
         //show current points
-        mAct.tvGamePoints.setY(mActHeight/2 + mAct.ivCrossTick.getHeight()/2 - mAct.tvGamePoints.getHeight());
+        mAct.tvGamePoints.setY(mAct.height/2 + mAct.ivCrossTick.getHeight()/2 - mAct.tvGamePoints.getHeight());
         mAct.handler.postDelayed(() -> {
             mAct.tvGamePoints.setVisibility(View.VISIBLE);
             float oldTY = mAct.tvGamePoints.getTranslationY();
@@ -507,7 +500,7 @@ public class GameManager {
         mAct.handler.postDelayed(() -> {
             mAct.tvLoose.setVisibility(View.VISIBLE);
             mAct.tvLoose.setAlpha(0);
-            mAct.tvLoose.setTranslationX(mActWidth/2);
+            mAct.tvLoose.setTranslationX(mAct.width/2);
             mAct.tvLoose.animate()
                     .setStartDelay(0)
                     .setInterpolator(new DecelerateInterpolator())
@@ -522,7 +515,7 @@ public class GameManager {
         //show repeat button
         //translate
         mAct.btnRepeat.setVisibility(View.VISIBLE);
-        mAct.btnRepeat.setTranslationY(mActHeight - mAct.btnRepeat.getX());
+        mAct.btnRepeat.setTranslationY(mAct.height - mAct.btnRepeat.getX());
         mAct.btnRepeat.animate()
                 .setInterpolator(new OvershootInterpolator(1.2f))
                 .translationY(0)
@@ -563,7 +556,7 @@ public class GameManager {
                     .setStartDelay(0)
                     .setInterpolator(new AccelerateInterpolator())
                     .setDuration(100)
-                    .translationX(-mActWidth/2)
+                    .translationX(-mAct.width/2)
                     .alpha(0)
                     .withEndAction(() -> mAct.tvLoose.setVisibility(View.INVISIBLE))
                     .start();
@@ -573,7 +566,7 @@ public class GameManager {
         //hide repeat button
         mAct.btnRepeat.animate()
                 .setInterpolator(new AnticipateInterpolator(1f))
-                .translationY(mActHeight - mAct.btnRepeat.getX())
+                .translationY(mAct.height - mAct.btnRepeat.getX())
                 .setDuration(250)
                 .setStartDelay(delay)
                 .start();
@@ -608,7 +601,7 @@ public class GameManager {
         mAct.handler.postDelayed(() -> {
             mAct.tvNewGamePoints.setVisibility(View.VISIBLE);
             mAct.tvNewGamePoints.setAlpha(0);
-            mAct.tvNewGamePoints.setTranslationX(mActWidth/2);
+            mAct.tvNewGamePoints.setTranslationX(mAct.width/2);
             mAct.tvNewGamePoints.animate()
                     .setStartDelay(0)
                     .setInterpolator(new DecelerateInterpolator())
@@ -644,7 +637,7 @@ public class GameManager {
                     .setStartDelay(0)
                     .setInterpolator(new AccelerateInterpolator())
                     .setDuration(200)
-                    .translationX(-mActWidth/2)
+                    .translationX(-mAct.width/2)
                     .alpha(0)
                     .withEndAction(() -> mAct.tvNewGamePoints.setVisibility(View.INVISIBLE))
                     .start();
@@ -660,7 +653,7 @@ public class GameManager {
             mAct.handler.postDelayed(() -> {
                 mAct.tvBonus.setVisibility(View.VISIBLE);
                 mAct.tvBonus.setAlpha(0);
-                mAct.tvBonus.setTranslationX(mActWidth/2);
+                mAct.tvBonus.setTranslationX(mAct.width/2);
                 mAct.tvBonus.animate()
                         .setStartDelay(0)
                         .setInterpolator(new DecelerateInterpolator())
@@ -678,7 +671,7 @@ public class GameManager {
                         .setStartDelay(0)
                         .setInterpolator(new AccelerateInterpolator())
                         .setDuration(200)
-                        .translationX(-mActWidth/2)
+                        .translationX(-mAct.width/2)
                         .alpha(0)
                         .withEndAction(() -> mAct.tvBonus.setVisibility(View.INVISIBLE))
                         .start();
@@ -691,7 +684,7 @@ public class GameManager {
             mAct.handler.postDelayed(() -> {
                 mAct.tvTimeGamePoints.setVisibility(View.VISIBLE);
                 mAct.tvTimeGamePoints.setAlpha(0);
-                mAct.tvTimeGamePoints.setTranslationX(mActWidth/2);
+                mAct.tvTimeGamePoints.setTranslationX(mAct.width/2);
                 mAct.tvTimeGamePoints.animate()
                         .setStartDelay(0)
                         .setInterpolator(new DecelerateInterpolator())
@@ -745,7 +738,7 @@ public class GameManager {
                         .setStartDelay(0)
                         .setInterpolator(new AccelerateInterpolator())
                         .setDuration(200)
-                        .translationX(-mActWidth/2)
+                        .translationX(-mAct.width/2)
                         .withEndAction(() -> mAct.tvTimeGamePoints.setVisibility(View.INVISIBLE))
                         .alpha(0)
                         .start();
@@ -758,7 +751,7 @@ public class GameManager {
     }
 
     private void scaleGameBg(long delay, long duration, View... view) {
-        float centerY = mActHeight/2;
+        float centerY = mAct.height/2;
         float maxY = centerY;
         float minY = centerY;
         for(View v : view) {

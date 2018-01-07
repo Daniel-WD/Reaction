@@ -200,10 +200,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />-->
 
-    <com.danielweidensdoerfer.reaction.ReflectingLayout
+    <com.danielweidensdoerfer.reaction.helper.ReflectingLayout
         android:id="@+id/reflectionLayout"
         android:layout_width="wrap_content"
-        android:layout_height="104sp"
+        android:layout_height="110sp"
         app:layout_constraintBottom_toTopOf="@+id/tvPoints"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -222,16 +222,16 @@
             android:textColor="@android:color/white"
             android:textSize="68sp"/>
 
-    </com.danielweidensdoerfer.reaction.ReflectingLayout>
+    </com.danielweidensdoerfer.reaction.helper.ReflectingLayout>
 
     <TextView
         android:id="@+id/tvPoints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
+        android:fontFamily="sans-serif_regular"
         android:text="@string/record_points_template"
         android:textColor="@color/snow"
-        android:textSize="30sp"
+        android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -247,7 +247,7 @@
         android:fontFamily="sans-serif-light"
         android:text="@string/round_record_template"
         android:textColor="@color/snow"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPlayedRounds" />
@@ -260,7 +260,7 @@
         android:fontFamily="sans-serif-light"
         android:text="@string/removed_objects_template"
         android:textColor="@color/snow"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
@@ -274,7 +274,7 @@
         android:fontFamily="sans-serif-light"
         android:text="@string/played_rounds_template"
         android:textColor="@color/snow"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
@@ -314,8 +314,8 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:background="@color/snow"
         app:layout_constraintBottom_toTopOf="@+id/tvPlayedRounds"
         app:layout_constraintEnd_toEndOf="parent"

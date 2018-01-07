@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -367,6 +368,7 @@ public class LoadingView extends View {
         enterTimeText.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {
                 mPTPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+
                 mPTPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.timeNumberSize));
             }
             @Override public void onAnimationEnd(Animator animation) {}

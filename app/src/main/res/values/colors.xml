@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="transparent">#00000000</color>
+
     <color name="dark_pink">#0C6056</color>
 
     <color name="trans_snow">#102332</color>

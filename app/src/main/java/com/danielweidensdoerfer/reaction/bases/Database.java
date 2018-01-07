@@ -12,10 +12,14 @@ public class Database {
     private static final String KEY_ROUND_RECORD = "key_round_record";
     private static final String KEY_REMOVED_OBJECTS = "key_removed_objects";
 
+    private static final String KEY_FIRST_START = "key_first_start";
+
     public static int recordPoints = 0;
     public static int playedRounds = 0;
     public static int roundRecord = 0;
     public static int removedObjects = 0;
+
+    public static boolean firstStart = true;
 
     private static SharedPreferences mPreferences;
 
@@ -28,6 +32,7 @@ public class Database {
         playedRounds = mPreferences.getInt(KEY_PLAYED_ROUNDS, 0);
         roundRecord = mPreferences.getInt(KEY_ROUND_RECORD, 0);
         removedObjects = mPreferences.getInt(KEY_REMOVED_OBJECTS, 0);
+        //firstStart = mPreferences.getBoolean(KEY_FIRST_START, true);
     }
 
     public static void save() {
@@ -36,6 +41,7 @@ public class Database {
         editor.putInt(KEY_PLAYED_ROUNDS, playedRounds);
         editor.putInt(KEY_ROUND_RECORD, roundRecord);
         editor.putInt(KEY_REMOVED_OBJECTS, removedObjects);
+        editor.putBoolean(KEY_FIRST_START, firstStart);
         editor.apply();
     }
 
