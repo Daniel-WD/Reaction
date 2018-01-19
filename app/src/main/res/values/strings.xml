@@ -9,18 +9,18 @@
     <string name="intro_title_two">SIMPLE</string>
     <string name="intro_content_two">
         The only thing you have to do is to remember all objects that will
-        be shown and remove them from a grid of mixed symbols
+        be shown to you and to remove them from a grid of mixed symbols
     </string>
 
     <string name="intro_title_three">CHALLENGING</string>
     <string name="intro_content_three">
-        Each round is getting trickier and there is a time limit you have to keep\n
+        Each round gets trickier and there is a time limit you must keep\n
         You can click a wrong symbol three times
     </string>
 
     <string name="intro_title_four">IMPROVING</string>
     <string name="intro_content_four">
-        If you play the game more often, you\'ll get better and better and your skills will increase.
+        If you play the game more often, you\'ll get better and better and your skills will increase
     </string>
 
     <string name="app_name">Discipline</string>
